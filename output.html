@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="third/reset.css">
+<link rel="stylesheet" href="third/pocketgrid.css">
+
+<link rel="stylesheet" href="third/leaflet-0.7.3.css">
+
+<style>
+
+
+
+.block{
+  width:33.3%;
+}
+
+
+@media screen and (max-width: 700px) {
+  .block{
+    width:50%;
+  }
+}
+
+.map{
+  height: 700px; 
+}
+
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.info {
+    padding: 6px 8px;
+    /*font: 14px/16px Arial, Helvetica, sans-serif;*/
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+</style>
+
+<body>
+
+  <div class='block-group'></div>
+
+  <script src="third/d3.min.js"></script>
+  <script src="third/leaflet-0.7.3.js"></script>
+  <script src="third/Leaflet.Sync.js"></script>
+
+  <script src="js/d3_on_leaflet.js"></script>
+
+	<script>
+
+
+var YlOrRd = ["#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"];
+var Blues = ["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"];
+var Greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+var Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+
+var BlGrn = Greens.reverse().slice(0,-1).concat(Blues);
+
+
+// map.sync(modflow_map);
+// modflow_map.sync(map);
+
+
+
+// TODO legend for d3_layer
+
+
+d3.json("data/outputs.json", function(data){ 
+  for (var i = 0; i < data.length; i++) {
+
+
+    var this_container = d3.select('.block-group')
+      .append('div')
+      .attr('class', 'block');
+
+    this_container
+      .append('div')
+      .html(' Head at time ' + data[i].time);
+
+    this_container.append('div')
+      .attr('class', 'map')
+      .attr('id', 'map'+i);
+
+
+    // create a map in the "map" div, set the view to a given place and zoom
+    var map = L.map('map'+i).setView([-31,150.8], 11);
+    // var map = L.map('feature_map').setView([39.74739, -105], 13);
+    var control = L.control.layers().addTo(map);
+
+    L.control.scale().addTo(map);
+
+    map.on('click', function(e) {
+        console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+    });
+
+    var Stamen_Toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> | Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20
+    }).addTo(map);
+
+
+    var layer = new d3_layer(data[i], "output "+data[i].time, control, d3.scale.quantize().range(BlGrn));
+
+
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = layer._color_func.range();
+            // grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+            // labels = [];
+
+        console.log(grades);
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            var inverted = layer._color_func.invertExtent(grades[i])
+            div.innerHTML +=
+                '<i style="background:' + grades[i] + '"></i> ' +
+                inverted[0].toFixed(2) + '&ndash;' + inverted[1].toFixed(2) + '<br>';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+
+
+
+  };
+});
+
+
+
+
+
+// d3.json('data/grid.json', function(data){
+//   control.addOverlay(
+//     L.geoJson(data, {
+//     }).addTo(map),
+//     'grid'
+//   )
+// });
+
+
+
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>ThreeGeoJSON Demo</title>
+                
+        <script src="ThreeGeoJSON.js"></script>
+                
+        <!-- Three.js library, movement controls, and jquery for the geojson-->
+        <script src="three.min.js"></script>
+        <script src="TrackballControls.js"></script>  
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        
+    </head>
+	
+    <body>
+		
+		<script type="text/JavaScript">
+        //New scene and camera
+			var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.5, 1000 );
+        
+        //New Renderer
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+        //Add lighting
+            scene.add(new THREE.AmbientLight(0x333333));
+            
+           
+        //Create a sphere to make visualization easier.
+            var geometry = new THREE.SphereGeometry(10,32,32);
+            //For ellipsoid testing: geometry.applyMatrix( new THREE.Matrix4().makeScale( 1.0, 1.0, 1.5 ) ); Try 6378137.0, 6356752.314140
+            var material = new THREE.MeshPhongMaterial({
+                    wireframe: true,
+                    transparent: true
+                });
+            var sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+            
+        //Draw the GeoJSON
+            var test_json = $.getJSON("data/bores_3d.json", function (data) { 
+                drawThreeGeo(data, 10, 'sphere', {
+                    color: 'green'
+                })    
+            });          
+            
+            
+        //Set the camera position
+            camera.position.z = 20;            
+            
+        //Enable controls
+            var controls = new THREE.TrackballControls(camera);
+            
+        //Render the image
+            function render() {
+                controls.update();
+                requestAnimationFrame(render);
+                //square.rotation.y += 0.001;      
+                renderer.render(scene, camera);
+            }
+            
+            render();
+            
+		</script>
+	</body>
+</html>

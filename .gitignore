@@ -1,3 +1,6 @@
+junk/
+data/NGIS_Lithology_unfiltered.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

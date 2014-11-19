@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 
-<link rel="stylesheet" href="reset.css">
-<link rel="stylesheet" href="pocketgrid.css">
+<link rel="stylesheet" href="third/reset.css">
+<link rel="stylesheet" href="third/pocketgrid.css">
 
-<link rel="stylesheet" href="leaflet-0.7.3.css">
+<link rel="stylesheet" href="third/leaflet-0.7.3.css">
 
 <style>
 
@@ -41,10 +41,19 @@ body{
   margin: 5%;
 }
 
+.block-half{
+  width: 50%;
+  margin: 0;
+}
+
 @media screen and (max-width: 700px) {
   .block{
     width:90%;
     margin: 5%;
+  }
+  .block-half{
+    width: 50%;
+    margin: 0;
   }
 }
 
@@ -74,10 +83,14 @@ svg{
   /*shape-rendering: geometricPrecision;*/
 }
 
+th,td{ 
+  padding-left: 10px;  
+  padding-right: 10px;  
+}
 
 
 /*grouped bar */
-.axis path,
+/*.axis path,
 .axis line {
   fill: none;
   stroke: #000;
@@ -94,10 +107,10 @@ svg{
 
 svg{
   font: 10px sans-serif;
-}
+}*/
 
 /*density*/
-
+/*
 .bar {
   fill: #bbb;
   shape-rendering: crispEdges;
@@ -118,14 +131,14 @@ svg{
 
 .y.axis path {
   display: none;
-}
+}*/
 
 /*scatter*/
 /*svg {
   padding: 10px;
 }*/
 
-.axis,
+/*.axis,
 .frame {
   shape-rendering: crispEdges;
 }
@@ -137,12 +150,12 @@ svg{
 .axis path {
   display: none;
 }
-
-.frame {
+*/
+/*.frame {
   fill: none;
   stroke: #aaa;
-}
-
+}*/
+/*
 circle {
   fill-opacity: .7;
 }
@@ -155,13 +168,53 @@ circle.hidden {
   fill: #000;
   fill-opacity: .125;
   stroke: #fff;
-}
+}*/
 
 #layer2{
     font: 10px serif;
 }
 
+#surrogate_models img{
+  width: 100%;
+  height: auto;
+}
+#surrogate_models .block-half{
+  padding: 10px;
+}
+
+.legend_square{
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+}
+
 </style>
+
+
+<!-- 
+
+
+var svgs = d3.selectAll('svg')[0];
+
+for(var i=0;i<svgs.length;i++){
+  console.log(svgs[i]);
+  var svg_xml = (new XMLSerializer).serializeToString(svgs[i]);
+
+  var downloadLink = document.createElement("a");
+  var blob = new Blob(["\ufeff", svg_xml]);
+  var url = URL.createObjectURL(blob);
+  downloadLink.href = url;
+  downloadLink.download = "data"+i+".svg";
+
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+
+}
+
+
+
+ -->
 
 <body>
 <script type="text/x-mathjax-config">
@@ -183,7 +236,7 @@ circle.hidden {
   });
 </script>
 
-  <script src="MathJax/MathJax.js"></script>
+  <script src="third/MathJax/MathJax.js"></script>
   <!-- <script src="MathJax/MathJax.js?config=TeX-AMS_HTML"></script>  -->
 
 <div class="block-group">
@@ -196,19 +249,29 @@ circle.hidden {
 <div class="block-group">
   <!-- <div class="block" id="uncertainty"></div> -->
   <div class="block">
-    <h2> Quantifying Uncertainty from all Locations </h2>
+
+
+    <h2> Quantifying uncertainty from different locations </h2>
     <ul>
       <li> Beyond inputs and parameters of model code, we parameterize key choices during conceptualization </li>
-      <li>Conceptualization work-flow (data to model inputs) is automated</li>
-      <li> Additional computation expedited using surrogate model </li>
+      <li> Conceptualization work-flow (data to model inputs) is automated</li>
+      <li> Computational time reduced using surrogate model </li>
       <li> Case study: Polynomial Chaos surrogate of MODFLOW model </li>
       <li> Inputs: parameters, inputs, boundary conditions, domain, locations </li>
       <li> Outputs: head and flux to river </li>
     </ul>
+
+    <h2> Surrogate effectiveness </h2>
+    <ul>
+      <li> Black box method with significant computational savings</li>
+      <li> Speedup and accuracy reduced with parameter interactions </li>
+      <li> Cannot be used outside of calibration range</li>
+      <li> Useful as a sensitivity analysis method </li>
+    </ul>
   </div>
   <div class="block"> 
     <h2>The nature of uncertainty</h2>
-    <p> Walker et al. 2003</p>
+    <p> (Walker et al. 2003)</p>
     <img src="opt_uncertainty.svg" alt=""> 
   </div>
 </div>
@@ -221,17 +284,35 @@ circle.hidden {
 <div class='block-group'>
   <div class="block" id="surrogate_models">
     
-<h2>Surrogate models</h2>
-<ol>
-<li>Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots). </li>
-<li>Projection based methods, where the governing equations are projected onto a reduced dimension subspace characterized by a basis of orthonormal vectors. Typically divided into SVD and Krylov based methods. </li>
-<li>Multi-fidelity based surrogates, built by simplifying the underlying physics or reducing numerical resolution.</li>
-</ol>
-   
+<h2>Three categories of Surrogate models</h2>
+  <div class='block-group'>
+    <div class='block block-half'> 1. Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots).</div>
+    <div class='block block-half'> <img src="opt_black_box.svg" alt=""> </div>
+  </div>
+  <div class='block-group'>
+    <div class='block block-half'> <img src="opt_projection.svg" alt=""> </div>
+    <div class='block block-half'> 2. Projection based methods, where the governing equations are projected onto a reduced dimension subspace characterized by a basis of orthonormal vectors. Typically divided into SVD and Krylov based methods. </div>
+  </div>
+  <div class='block-group'>
+    <div class='block block-half'> 3. Multi-fidelity based surrogates, built by simplifying the underlying physics or reducing numerical resolution. </div>
+    <div class='block block-half'> <img src="opt_hierarchical.svg" alt=""> </div>
 
   </div>
+
+<!--   <ol>
+  <li>Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots). </li>
+  <img src="opt_black_box.svg" alt="">
+  <li>Projection based methods, where the governing equations are projected onto a reduced dimension subspace characterized by a basis of orthonormal vectors. Typically divided into SVD and Krylov based methods. </li>
+  <img src="opt_projection.svg" alt="">
+  <li>Multi-fidelity based surrogates, built by simplifying the underlying physics or reducing numerical resolution.</li>
+  <img src="opt_hierarchical.svg" alt="">
+  </ol> -->
+   
+  </div>
+
   <div class="block" id='polynomial_chaos' >
     <h2>Polynomial Chaos</h2>
+    <p>(Najm 2009)</p>
     <p>Chosen because it can be broadly applied to any input-output relationship, results in significant runtime reduction, and generates sensitivities during calibration.</p>
     <p>Let $(\Omega, \sigma, P)$ be a probability space where $\sigma$ is a $\sigma$-algebra on $\Omega$ and $P$ is a probability measure on $(\sigma, P)$.</p>
 <p>Any random variable $X: \Omega \rightarrow \mathbb{R}$ with finite variance (square integrable, $X \in L^2(\Omega)$) may be written as the polynomial chaos (PC) expansion of orthogonal polynomials $\Gamma_p$ </p>
@@ -239,7 +320,7 @@ circle.hidden {
 X(\omega) &amp;= a_0 \Gamma_0 + \sum_{i_1=1}^\infty a_{i_1} \Gamma_1(\xi_{i_1}) + \sum_{i_1=1}^\infty \sum_{i_2=1}^{i_1} a_{i_1i_2} \Gamma_2(\xi_{i_1},\xi_{i_2})+ \cdots \notag \newline<br />
 &amp;= \sum_{k=0}^\infty \alpha_k \Psi_k(\xi_1,\xi_2,\cdots) <br />
 \end{align}$$</p>
-<p>Since ${\xi_i}_{i=1}^\infty$ are Gaussian, this orthogonality condition requires $\Gamma_p$ (or equivalently $\Psi_k$ ) to be multivariate Hermite polynomials.</p>
+<p>Since ${\xi_i}_{i=1}^\infty$ are Gaussian, this orthogonality condition requires $\Gamma_p$ (or equivalently $\Psi_k$ ) to be multivariate Hermite polynomials. Other polynomials can be used with other distributions.</p>
 <p>For random fields (processes) including spatial $x$ and temporal $t$ <br />
 $$\begin{equation}<br />
 X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdots). <br />
@@ -294,36 +375,45 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 
 
 
+
+
 <div class="block-group">
-  <div class="block" id="grouped_bar">
+    <!-- <div class="block" id="uncertainty"></div> -->
+  <div class="block">
     <h2> Parameter sensitivites </h2>
     <p>Computed using Polynomial Chaos expansion. Equal values for "Total" and "Sobol" indices indicates limited parameter interaction. PC complexity scales exponentially with the number of relevant interactions.</p>
+    <div> 
+      <div class='legend_square' style="background-color: steelblue;"></div> Sobol Index
+      <div class='legend_square' style="background-color: darkred;"></div> Total Index
   </div>
-  <div class="block" id="density">
-    <h2> Output head distribution </h2>
-    <p> A comparision of the output distribution, as approximated by both the surrogate and complex mode.</p>
-  </div>
-</div>
-<div class="block-group">
-  <!-- <div class="block" id="uncertainty"></div> -->
-  <div class="block" id="scatter">
-    <h2> Surrogate Performance </h2>
+    <div class="block-group" id="grouped_bar"></div>
   </div>
   <div class="block">
+    <h2> Output head distribution </h2>
+    <div class="block-group" id="density"></div>
+  </div>
+
+</div>
+
+<div class="block-group">
+
+  <div class="block">
+    <h2> Surrogate Performance </h2>
+    <div id="scatter_legend"></div>
+    <div class="block-group" id="scatter"></div>
+  </div>
+
+  <div class="block">
     <h2>Runtime Reduction</h2>
-    <table>
+    <table id='runtime'>
       <tr>
         <th> Model size</th>
         <th> Build time (min) </th>
         <th> On-line runtime reduction (%) </th>
       </tr>
-      <tr style="text-align: right;">
-        <td> 100x100 </td>
-        <td> 140 </td>
-        <td> 99% </td>
-      </tr>
+
     </table>
-<!--     <h2>Further Work</h2>
+  <!--     <h2>Further Work</h2>
       <ul>
         <li></li>
 
@@ -334,364 +424,92 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 
 
 
-  <script src="d3.min.js"></script>
-  <script src="leaflet-0.7.3.js"></script>
-  <script src="Leaflet.Sync.js"></script>
-  <script src="grouped_bar.js"></script>
-  <script src="density.js"></script>
-  <script src="scatter.js"></script>
-  <!-- <script src="uncertainty.js"></script> -->
+  <script src="third/d3.min.js"></script>
+  <script src="third/leaflet-0.7.3.js"></script>
+  <script src="third/Leaflet.Sync.js"></script>
+  <script src="js/grouped_bar.js"></script>
+  <script src="js/density.js"></script>
+  <script src="js/scatter_static.js"></script>
 
+  <script src="js/d3_on_leaflet.js"></script>
+  <!-- <script src="js/uncertainty.js"></script> -->
+
+  <script src="js/maps.js"></script>
 	<script>
 
+var color = d3.scale.category10().range();
+d3.select("#scatter_legend").html("<div class='legend_square' style='background-color:" + color[0] + ";'></div> within calibration range"
+    +" <div class='legend_square' style='background-color:" + color[1] + ";'></div> expanded range");
 
+d3.json("data/openturns_pce_10_20.json", function(error, data) {
+  
+      // <tr style="text-align: right;">
+      //   <td> 100x100 </td>
+      //   <td> 140 </td>
+      //   <td> 99% </td>
+      // </tr>
+  var runtime = d3.select("#runtime").append('tr').style('text-align','right');
+  runtime.append('td').html('10x20');
+  runtime.append('td').html((data['building_time']/60).toFixed(2));
+  runtime.append('td').html((data['average_run_time']/data['average_surrogate_run_time']).toFixed(2));
+
+  var complex = data["sample_Y"];
+  var meta = data["sample_YPC"];
+
+  var num_outputs = complex[0].length;
+  var num_samples = complex.length;
+  var num_params = data['p_names'].length;
 
   function draw_all(){
-    density();
-    grouped_bar();
-    scatter();
-    // uncertainty();
+      d3.selectAll("#scatter div").remove();
+      d3.selectAll("#grouped_bar div").remove();
+      d3.selectAll("#density div").remove();
+
+
+
+      for (var i = 0; i < num_outputs; i++) {
+          var scatter_data = 
+            d3.range(num_samples).map(function(j){ 
+              return { x: complex[j][i], 
+                      y: meta[j][i],
+                      z: 'calibration' }
+            });
+
+            d3.range(num_samples).forEach(function(j){ 
+              scatter_data.push({
+                x: data["extended_sample_Y"][j][i], 
+                y: data["extended_sample_YPC"][j][i],
+                z: 'extended'
+              });
+            });
+
+          scatter(d3.select("#scatter").append('div').attr('class','block block-half'), scatter_data);
+
+
+          var grouped_bar_data = d3.range(num_params).map(function(j){ 
+            return { 
+              "State": data['p_names'][j],
+              "Sobol Index": data["SU_by_output"][i][j],
+              "Total Index": data["SUT_by_output"][i][j]
+            }
+          });
+          grouped_bar(d3.select("#grouped_bar").append('div').attr('class','block block-half'), grouped_bar_data);
+
+          var density_data = d3.range(num_samples).map(function(j){ 
+            return complex[j][i];
+          });
+          density(d3.select("#density").append('div').attr('class','block block-half'), density_data)
+
+      };
+
+    // uncertainty();    
   }
   draw_all();
   window.onresize = draw_all;
 
 
-var YlOrRd = ["#ffffcc","#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026"];
-var Blues = ["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"];
-var Greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
-var Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
-
-
-
-/* -----------------------------------------------
-  feature map
------------------------------------------------ */
-
-// create a map in the "map" div, set the view to a given place and zoom
-var map = L.map('feature_map').setView([-31,150.8], 11);
-// var map = L.map('feature_map').setView([39.74739, -105], 13);
-var control = L.control.layers().addTo(map);
-
-L.control.scale().addTo(map);
-
-// add an OpenStreetMap tile layer
-// L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-//     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-// }).addTo(map);
-
-map.on('click', function(e) {
-    console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
 });
 
-
-
-var Stamen_Toner = L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> | Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-  subdomains: 'abcd',
-  minZoom: 0,
-  maxZoom: 20
-}).addTo(map);
-
-
-// https://github.com/Leaflet/Leaflet.draw
-
-function onEachFeature(feature, layer) {
-  var popupContent = '<div class="popup">';
-  if (feature.properties) {
-    for (var k in feature.properties) {
-        var v = feature.properties[k];
-        popupContent += k + ': ' + v + '<br />';
-    }
-  }
-  popupContent += '</div>';
-
-  layer.bindPopup(popupContent);
-}
-
-
-d3.json('data/nsw_sites.json', function(data){
-
-  control.addOverlay(
-    L.geoJson(data, {
-      onEachFeature: onEachFeature,
-
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 6,
-          fillColor: "#1a1a1a",
-          color: "#000",
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      }
-    }).addTo(map), 
-  "NSW Water sites");
-
-});
-
-
-
-
-d3.json('data/APPT250K_Contours_line.json', function(data){
-
-  // junk = data;
-
-  var contours = data.features.map(function(d){ return d.properties.ELEVATION; }).sort(function(a,b){ return a>b;});
-
-  var contour_color = d3.scale.quantize()
-  // .domain([ contours[Math.round(contours.length/10)], contours[Math.round(9*contours.length/10)] ])
-  .domain(d3.extent(contours))
-  .range(YlOrRd);
-
-  control.addOverlay(
-    L.geoJson(data, {
-      onEachFeature: onEachFeature,
-      style : function(feature){
-        return {
-          "color": contour_color(feature.properties.ELEVATION),
-          "weight": 1,
-          "opacity": 1
-        }
-      }
-    }).addTo(map),
-    "Contours"
-  )
-
-});
-
-
-var river_color = d3.scale.ordinal()
-  .domain(["Minor", "Major"])
-  .range(Blues.slice(-2));
-
-var river_width = d3.scale.ordinal()
-  .domain(["Minor", "Major"])
-  .range([1,5]);
-
-d3.json('data/APPT250K_WatercourseLines_line.json', function(data){
-
-  control.addOverlay(
-    L.geoJson(data, {
-      onEachFeature: onEachFeature,
-      style : function(feature){
-        return {
-          "color": river_color(feature.properties.HIERARCHY),
-          "weight": river_width(feature.properties.HIERARCHY),
-          "opacity": 1
-        }
-      }
-    }).addTo(map),
-    "Water courses"
-  )
-
-});
-
-
-
-
-/* -----------------------------------------------
-  generic loading of geojson -- good default/start
------------------------------------------------ */
-
-// could use https://github.com/calvinmetcalf/leaflet.shapefile
-//    or https://github.com/calvinmetcalf/leaflet.filegdb
-
-var files = [
-              // '  ', 
-              // 'APPT250K_Contours_line.json',
-              // "AHGFSurficialHydrogeologicUnit.json",
-              "IGWWaterTableYield.json",
-              "AHGFWaterTableAquifer.json",
-              // "IGWAquiferYield.json",
-              'GeologicUnitPolygons1M.json',
-              "IGWWaterTableHydraulicConductivity.json",
-              "rainfall.json",
-              "wells.json",
-              "perturbed_boundary.json",
-              "aquifer_boundary.json",
-              "simplified_aquifer_boundary.json",
-              'clipped_GeologicUnitPolygons1M.json'
-              ];
-
-function load_geojson(file){
-  d3.json('data/'+file, function(data){
-    control.addOverlay(
-      L.geoJson(data, {
-        onEachFeature: onEachFeature,
-      }),
-      file
-    )
-  });
-}
-
-for (var i = files.length - 1; i >= 0; i--) {
-  load_geojson(files[i]);
-};
-
-
-// d3.json('APPT250K_WatercourseLines_line.json', function(data){
-//   control.addOverlay(
-//     L.geoJson(data, {
-//       onEachFeature: onEachFeature,
-//     }),
-//     "Water courses"
-//   )
-// });
-
-// d3.json('APPT250K_Contours_line.json', function(data){
-//   control.addOverlay(
-//     L.geoJson(data, {
-//       onEachFeature: onEachFeature,
-//     }),
-//     "Contours"
-//   )
-// });
-
-
-
-
-/* -----------------------------------------------
-  modflow map
------------------------------------------------ */
-
-// create a map in the "map" div, set the view to a given place and zoom
-var modflow_map = L.map('modflow_map').setView([-31,150.8], 11);
-var modflow_control = L.control.layers().addTo(modflow_map);
-
-L.control.scale().addTo(modflow_map);
-
-// add an OpenStreetMap tile layer
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(modflow_map);
-
-
-map.sync(modflow_map);
-modflow_map.sync(map);
-
-function d3_layer(geojson, name, color_func){
-    
-    this._reset = function(){
-
-      var this_guy = this;
-
-      this._data.forEach(function(d){
-          d.pix_topLeft = modflow_map.latLngToLayerPoint(d.topLeft);
-          d.pix_bottomRight = modflow_map.latLngToLayerPoint(d.bottomRight);
-      });
-
-      this._el.selectAll('rect')
-        .data(this._data)
-        .attr('x', function(d) { return d.pix_topLeft.x; })
-        .attr('y', function(d) { return d.pix_topLeft.y; })
-        .attr('width', function(d){ return d.pix_bottomRight.x - d.pix_topLeft.x; })
-        .attr('height', function(d){ return d.pix_bottomRight.y - d.pix_topLeft.y; })
-        .attr('fill', function(d){ 
-          if (d.value == 0 || d.value == -9999) return 'rgba(0,0,0,0)';
-          // else return this_guy._color_func(d.value); 
-          return this_guy._color_func(d.value); 
-        })
-        .on('click', function(d){
-          console.log(d.value);
-        })
-
-    }
-
-
-    this._color_func = color_func;
-
-    var fake = L.geoJson({"type": "LineString","coordinates":[[0,0],[0,0]]}).addTo(modflow_map);
-    modflow_control.addOverlay(fake, name);
-
-    this._el = d3.select(fake._layers[Object.keys(fake._layers)[0]]._container);
-    
-    var this_guy = this;
-
-    d3.json(geojson, function(data){
-
-      console.log(data);
-
-      // var max = d3.max(data.array.map(function(d){ return d3.max(d); }));
-      var max = d3.max(data.array.map(function(d){ return d3.max(d.filter(function(e){ 
-        return e != -9999; //! isNaN(e); 
-      })); }));
-      var min = d3.min(data.array.map(function(d){ return d3.min(d.filter(function(e){ 
-        return e != -9999; 
-      })); }));
-
-      this_guy._color_func.domain([min,max]);
-
-      this_guy._data = [];
-
-      // junky = this_guy._data;
-
-      // make data easy for d3
-      var nrow = data.array.length;
-      var ncol = data.array[0].length;
-      console.log("nrow,ncol",nrow,ncol, data.bottomLeft);
-      for (var i = 0; i < nrow; i++) {
-        for (var j = 0; j < ncol; j++) {
-          this_guy._data.push({ 
-            topLeft: {lat: data.bottomLeft.lat+(i+1)*data.pixelHeight, lng: data.bottomLeft.lng+(j)*data.pixelWidth},
-            bottomRight: {lat: data.bottomLeft.lat+(i)*data.pixelHeight, lng: data.bottomLeft.lng+(j+1)*data.pixelWidth},
-            value: data.array[i][j] 
-          });
-          this_guy._el.append('rect');
-        };
-      };
-      
-      this_guy._reset();
-
-
-    });
-
-    modflow_map.on('viewreset', this._reset, this);
-
-}
-
-var contour_color = d3.scale.log()
-.range(d3.extent(YlOrRd));
-
-new d3_layer("data/ibound.json", "d3 ibound", d3.scale.linear().range(["white", "black"]));
-new d3_layer("data/perturbed_ibound.json", "d3 perturbed ibound", d3.scale.linear().range(["white", "black"]));
-new d3_layer("data/hk_mean.json", "d3 hk", d3.scale.log().range(d3.extent(YlOrRd)));
-new d3_layer("data/sy_mean.json", "d3 sy", d3.scale.linear().range(d3.extent(YlOrRd)));
-new d3_layer("data/riv.json", "d3 river", d3.scale.quantize().range(Blues));
-new d3_layer("data/top.json", "d3 top", d3.scale.quantize().range(YlOrRd));
-new d3_layer("data/rasterize_well.json", "d3 well", d3.scale.quantize().range(YlOrRd));
-
-
-
-
-
-d3.json('data/grid.json', function(data){
-  modflow_control.addOverlay(
-    L.geoJson(data, {
-      onEachFeature: onEachFeature,
-    }).addTo(modflow_map),
-    'grid'
-  )
-});
-
-
-// d3.json('data/APPT250K_WatercourseLines_line.json', function(data){
-
-//   control.addOverlay(
-//     L.geoJson(data, {
-//       onEachFeature: onEachFeature,
-//       style : function(feature){
-//         return {
-//           "color": river_color(feature.properties.HIERARCHY),
-//           "weight": river_width(feature.properties.HIERARCHY),
-//           "opacity": 0.5
-//         }
-//       }
-//     }).addTo(modflow_map),
-//     "Water courses"
-//   )
-
-// });
 
 
 

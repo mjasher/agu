@@ -1,14 +1,17 @@
 
-function density(){
 
-  d3.selectAll("#density svg").remove();
+function density(el, faithful){
+
+  // d3.selectAll("#density svg").remove();
 
   var margin = {top: 20, right: 30, bottom: 30, left: 40},
-      width = document.getElementById('density').clientWidth - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      width = el.node().clientWidth - margin.left - margin.right, //document.getElementById('density')
+      // height = 400 - margin.top - margin.bottom;
+      height = width - margin.top - margin.bottom;
+
 
   var x = d3.scale.linear()
-      .domain([30, 110])
+      .domain(d3.extent(faithful))
       .range([0, width]);
 
   var y = d3.scale.linear()
@@ -30,9 +33,9 @@ function density(){
 
   var histogram = d3.layout.histogram()
       .frequency(false)
-      .bins(x.ticks(40));
+      .bins(x.ticks(20));
 
-  var svg = d3.select("#density").append("svg")
+  var svg = el.append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -53,9 +56,9 @@ function density(){
       .attr("class", "y axis")
       .call(yAxis);
 
-  d3.json("data/density_demo.json", function(error, faithful) {
+  // d3.json("data/density_demo.json", function(error, faithful) {
     var data = histogram(faithful),
-        kde = kernelDensityEstimator(epanechnikovKernel(7), x.ticks(100));
+        kde = kernelDensityEstimator(epanechnikovKernel(1.1), x.ticks(100));
 
     svg.selectAll(".bar")
         .data(data)
@@ -70,7 +73,43 @@ function density(){
         .datum(kde(faithful))
         .attr("class", "line")
         .attr("d", line);
-  });
+  // });
+
+
+
+
+  svg.selectAll('.bar').style({ 'fill': '#bbb', 'shape-rendering': 'crispEdges' });
+  svg.selectAll('.line').style({ 'fill': 'none', 'stroke':'#000', 'stroke-width': '1.5px' });
+  svg.selectAll('.axis path').style({ 'fill': 'none', 'stroke': '#000', 'shape-rendering': 'crispEdges' });
+  svg.selectAll('.axis line').style({ 'fill': 'none', 'stroke': '#000', 'shape-rendering': 'crispEdges' });
+  svg.selectAll('.axis path').style('display', 'none');
+  svg.style('font','10px sans-serif')
+
+
+
+// .bar {
+//   fill: #bbb;
+//   shape-rendering: crispEdges;
+// }
+
+// .line {
+//   fill: none;
+//   stroke: #000;
+//   stroke-width: 1.5px;
+// }
+
+// .axis path,
+// .axis line {
+//   fill: none;
+//   stroke: #000;
+//   shape-rendering: crispEdges;
+// }
+
+// .y.axis path {
+//   display: none;
+// }
+
+
 
   function kernelDensityEstimator(kernel, x) {
     return function(sample) {
