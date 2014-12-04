@@ -133,7 +133,7 @@ body .markdown-body
 }
 
 .markdown-body .codehilitetable pre,
-.markdown-body div.codehilite {
+.markdown-body .codehilitetable div.codehilite {
   margin: 0;
 }
 
@@ -583,16 +583,11 @@ body .markdown-body
 .markdown-body .admonition {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
+  position: relative;
   border-radius: 3px;
-  padding: 0.5em 1em 0.5em 1em;
-  color: #888888;
-  background-color: #F7F7F7;
-  border: 1px solid #888888;
-}
-
-.markdown-body .admonition blockquote {
-  color: rgba(136, 136, 136, 0.5);
-  border-left: 4px solid rgba(136, 136, 136, 0.5);
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
 }
 
 .markdown-body .admonition table {
@@ -601,7 +596,6 @@ body .markdown-body
 
 .markdown-body .admonition p {
   padding: 0;
-  margin: 0;
 }
 
 .markdown-body .admonition-title {
@@ -609,110 +603,125 @@ body .markdown-body
   margin: 0;
 }
 
-.markdown-body .admonition-icon {
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
   font: normal normal 16px fontawesome-mini;
-  line-height: 1.5;
   -moz-osx-font-smoothing: grayscale;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  float: left;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
 }
 
 .markdown-body .attention {
-  color: #4F8A10;
-  background-color: #DFF2BF;
-  border: 1px solid #4F8A10;
+  border-left: 6px solid #a6d796;
 }
 
 .markdown-body .caution {
-  color: #D63301;
-  background-color: #FFCCBA;
-  border: 1px solid #D63301;
+  border-left: 6px solid #d7a796;
 }
 
 .markdown-body .hint {
-  color: #00529B;
-  background-color: #BDE5F8;
-  border: 1px solid #00529B;
+  border-left: 6px solid #96c6d7;
 }
 
 .markdown-body .danger {
-  color: #D8000C;
-  background-color: #FFBABA;
-  border: 1px solid #D8000C;
+  border-left: 6px solid #c25f77;
 }
 
 .markdown-body .question {
-  color: #00049b;
-  background-color: #BDC8F8;
-  border: 1px solid #00049b;
+  border-left: 6px solid #96a6d7;
 }
 
 .markdown-body .note {
-  color: #9F6000;
-  background-color: #FEEFB3;
-  border: 1px solid #9F6000;
+  border-left: 6px solid #d7c896;
 }
 
-.markdown-body .attention {
-  color: #4F8A10;
-  background-color: #DFF2BF;
-  border: 1px solid #4F8A10;
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
 }
 
-.markdown-body .caution blockquote {
-  color: rgba(214, 51, 1, .5);
-  border-left: 4px solid rgba(214, 51, 1, .5);
-}
-
-.markdown-body .hint blockquote {
-  color: rgba(0, 82, 155, .5);
-  border-left: 4px solid rgba(0, 82, 155, .5);
-}
-
-.markdown-body .danger blockquote {
-  color: rgba(216, 0, 12, .5);
-  border-left: 4px solid rgba(216, 0, 12, .5);
-}
-
-.markdown-body .question blockquote {
-  color: rgba(0, 4, 155, .5);
-  border-left: 4px solid rgba(0, 4, 155, .5);;
-}
-
-.markdown-body .note blockquote {
-  color: rgba(159, 96, 0, .5);
-  border-left: 4px solid rgba(159, 96, 0, .5);
-}
-
-.markdown-body .admonition-icon:before {
-  content: "\f040\00a0";
-}
-
-.markdown-body .attention > .admonition-icon:before {
-  content: "\f058\00a0";
-}
-
-.markdown-body .caution > .admonition-icon:before {
-  content: "\f06a\00a0";
-}
-
-.markdown-body .hint > .admonition-icon:before {
-  content: "\f05a\00a0";
-}
-
-.markdown-body .danger > .admonition-icon:before {
-  content: "\f056\00a0";
-}
-
-.markdown-body .question > .admonition-icon:before {
-  content: "\f059\00a0";
-}
-
-.markdown-body .note > .admonition-icon:before {
-  content: "\f040\00a0";
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* progress bar*/
@@ -721,11 +730,10 @@ body .markdown-body
   width: 300px;
   margin: 10px 0;
   height: 24px;
-  border: 1px solid #ccc;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  background-color: #F8F8F8;
+  background-color: #ededed;
   position: relative;
   box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
 }
@@ -746,81 +754,71 @@ body .markdown-body
 .markdown-body .progress-bar {
   height: 24px;
   float: left;
-  border-right: 1px solid #ccc;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  background-color: #34c2e3;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5);
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
   background-size: 30px 30px;
   background-image: -webkit-linear-gradient(
     135deg, rgba(255, 255, 255, .4) 27%,
     transparent 27%,
-    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
     rgba(255, 255, 255, .4) 77%,
     transparent 77%, transparent
   );
   background-image: -moz-linear-gradient(
     135deg,
     rgba(255, 255, 255, .4) 27%, transparent 27%,
-    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
     rgba(255, 255, 255, .4) 77%, transparent 77%,
     transparent
   );
   background-image: -ms-linear-gradient(
     135deg,
     rgba(255, 255, 255, .4) 27%, transparent 27%,
-    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
     rgba(255, 255, 255, .4) 77%, transparent 77%,
     transparent
   );
   background-image: -o-linear-gradient(
     135deg,
     rgba(255, 255, 255, .4) 27%, transparent 27%,
-    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
     rgba(255, 255, 255, .4) 77%, transparent 77%,
     transparent
   );
   background-image: linear-gradient(
     135deg,
     rgba(255, 255, 255, .4) 27%, transparent 27%,
-    transparent 53%, rgba(255, 255, 255, .4) 53%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
     rgba(255, 255, 255, .4) 77%, transparent 77%,
     transparent
   );
 }
 
 .markdown-body .progress-100plus .progress-bar {
-  background-color: #1ee038;
+  background-color: #a6d796;
 }
 
 .markdown-body .progress-80plus .progress-bar {
-  background-color: #86e01e;
+  background-color: #c6d796;
 }
 
 .markdown-body .progress-60plus .progress-bar {
-  background-color: #f2d31b;
+  background-color: #d7c896;
 }
 
 .markdown-body .progress-40plus .progress-bar {
-  background-color: #f2b01e;
+  background-color: #d7a796;
 }
 
 .markdown-body .progress-20plus .progress-bar {
-  background-color: #f27011;
+  background-color: #d796a6;
 }
 
 .markdown-body .progress-0plus .progress-bar {
-  background-color: #f63a0f;
-}
-
-.markdown-body .gloss .progress-bar {
-  box-shadow:
-    inset -1px 1px 0 rgba(255, 255, 255, .5),
-    inset 0 -4px 12px rgba(255, 255, 255, .7),
-    inset 0 4px 12px rgba(255, 255, 255, .7),
-    inset 0 -12px 0 rgba(0, 0, 0, .05),
-    inset 1px -1px 0 rgba(255, 255, 255, .2);
+  background-color: #c25f77;
 }
 
 .markdown-body .candystripe-animate .progress-bar{
@@ -857,6 +855,12 @@ body .markdown-body
   100% {
     background-position: 60px 0;
   }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
 }
 
 /* Multimarkdown Critic Blocks */
@@ -975,7 +979,18 @@ body .markdown-body
 
   .markdown-body .progress,
   .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
     box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
   }
 
   .markdown-body tr,
@@ -999,98 +1014,7 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><style>.codehilite pre .hll { background-color: #ffffcc }
-.codehilite pre  { background: #f8f8f8; color: #333333 }
-.codehilite pre .c { color: #999988; font-style: italic } /* Comment */
-.codehilite pre .err { color: #a61717; background-color: #e3d2d2 } /* Error */
-.codehilite pre .k { font-weight: bold } /* Keyword */
-.codehilite pre .n { color: #333333 } /* Name */
-.codehilite pre .o { font-weight: bold } /* Operator */
-.codehilite pre .cm { color: #999988; font-style: italic } /* Comment.Multiline */
-.codehilite pre .cp { color: #999999; font-weight: bold } /* Comment.Preproc */
-.codehilite pre .c1 { color: #999988; font-style: italic } /* Comment.Single */
-.codehilite pre .cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
-.codehilite pre .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
-.codehilite pre .ge { font-style: italic } /* Generic.Emph */
-.codehilite pre .gr { color: #aa0000 } /* Generic.Error */
-.codehilite pre .gh { color: #999999 } /* Generic.Heading */
-.codehilite pre .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
-.codehilite pre .go { color: #888888 } /* Generic.Output */
-.codehilite pre .gp { color: #555555 } /* Generic.Prompt */
-.codehilite pre .gs { font-weight: bold } /* Generic.Strong */
-.codehilite pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.codehilite pre .gt { color: #aa0000 } /* Generic.Traceback */
-.codehilite pre .kc { font-weight: bold } /* Keyword.Constant */
-.codehilite pre .kd { font-weight: bold } /* Keyword.Declaration */
-.codehilite pre .kn { font-weight: bold } /* Keyword.Namespace */
-.codehilite pre .kp { font-weight: bold } /* Keyword.Pseudo */
-.codehilite pre .kr { font-weight: bold } /* Keyword.Reserved */
-.codehilite pre .kt { color: #445588; font-weight: bold } /* Keyword.Type */
-.codehilite pre .m { color: #009999 } /* Literal.Number */
-.codehilite pre .s { color: #dd1144 } /* Literal.String */
-.codehilite pre .na { color: #008080 } /* Name.Attribute */
-.codehilite pre .nb { color: #0086b3 } /* Name.Builtin */
-.codehilite pre .nc { color: #445588; font-weight: bold } /* Name.Class */
-.codehilite pre .no { color: #008080 } /* Name.Constant */
-.codehilite pre .nd { color: #333333 } /* Name.Decorator */
-.codehilite pre .ni { color: #800080 } /* Name.Entity */
-.codehilite pre .ne { color: #990000; font-weight: bold } /* Name.Exception */
-.codehilite pre .nf { color: #990000; font-weight: bold } /* Name.Function */
-.codehilite pre .nl { color: #333333 } /* Name.Label */
-.codehilite pre .nn { color: #555555 } /* Name.Namespace */
-.codehilite pre .nx { color: #333333 } /* Name.Other */
-.codehilite pre .py { color: #333333 } /* Name.Property */
-.codehilite pre .nt { color: #000080 } /* Name.Tag */
-.codehilite pre .nv { color: #008080 } /* Name.Variable */
-.codehilite pre .ow { font-weight: bold } /* Operator.Word */
-.codehilite pre .w { color: #bbbbbb } /* Text.Whitespace */
-.codehilite pre .mb { color: #009999 } /* Literal.Number.Bin */
-.codehilite pre .mf { color: #009999 } /* Literal.Number.Float */
-.codehilite pre .mh { color: #009999 } /* Literal.Number.Hex */
-.codehilite pre .mi { color: #009999 } /* Literal.Number.Integer */
-.codehilite pre .mo { color: #009999 } /* Literal.Number.Oct */
-.codehilite pre .sb { color: #dd1144 } /* Literal.String.Backtick */
-.codehilite pre .sc { color: #dd1144 } /* Literal.String.Char */
-.codehilite pre .sd { color: #dd1144 } /* Literal.String.Doc */
-.codehilite pre .s2 { color: #dd1144 } /* Literal.String.Double */
-.codehilite pre .se { color: #dd1144 } /* Literal.String.Escape */
-.codehilite pre .sh { color: #dd1144 } /* Literal.String.Heredoc */
-.codehilite pre .si { color: #dd1144 } /* Literal.String.Interpol */
-.codehilite pre .sx { color: #dd1144 } /* Literal.String.Other */
-.codehilite pre .sr { color: #009926 } /* Literal.String.Regex */
-.codehilite pre .s1 { color: #dd1144 } /* Literal.String.Single */
-.codehilite pre .ss { color: #990073 } /* Literal.String.Symbol */
-.codehilite pre .bp { color: #999999 } /* Name.Builtin.Pseudo */
-.codehilite pre .vc { color: #008080 } /* Name.Variable.Class */
-.codehilite pre .vg { color: #008080 } /* Name.Variable.Global */
-.codehilite pre .vi { color: #008080 } /* Name.Variable.Instance */
-.codehilite pre .il { color: #009999 } /* Literal.Number.Integer.Long */</style><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-MathJax.Hub.Config({
-  config: ["MMLorHTML.js"],
-  extensions: ["tex2jax.js"],
-  jax: ["input/TeX"],
-  tex2jax: {
-    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-    processEscapes: false
-  },
-  TeX: {
-    extensions: ["AMSmath.js", "AMSsymbols.js"],
-    TagSide: "right",
-    TagIndent: ".8em",
-    MultLineWidth: "85%",
-    equationNumbers: {
-      autoNumber: "AMS",
-    },
-    unicode: {
-      fonts: "STIXGeneral,'Arial Unicode MS'"
-    }
-  },
-  showProcessingMessages: false
-});
-</script>
-<title>poster</title></head><body><article class="markdown-body"><div class="toc">
+</style><title>poster</title></head><body><article class="markdown-body"><div class="toc">
 <ul>
 <li><a href="#findings-conclusionsdiscussiontake-home-message">Findings (conclusions/discussion/take-home message)</a></li>
 <li><a href="#problem">Problem</a></li>
@@ -1108,16 +1032,16 @@ Clive's advice
 * All diagrams/photos need captions so they stand alone. Include large eye catcher
  -->
 
-<h2 id="findings-conclusionsdiscussiontake-home-message"><a name="user-content-findings-conclusionsdiscussiontake-home-message" href="#findings-conclusionsdiscussiontake-home-message" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Findings (conclusions/discussion/take-home message)</h2>
-<h2 id="problem"><a name="user-content-problem" href="#problem" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Problem</h2>
+<h2 id="findings-conclusionsdiscussiontake-home-message"><a name="user-content-findings-conclusionsdiscussiontake-home-message" href="#findings-conclusionsdiscussiontake-home-message" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Findings (conclusions/discussion/take-home message)</h2>
+<h2 id="problem"><a name="user-content-problem" href="#problem" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Problem</h2>
 <p>(In plain English, clearly say what the problem/issue is and how your research might improve this. )</p>
-<h2 id="3-categories-of-surrogate-models"><a name="user-content-3-categories-of-surrogate-models" href="#3-categories-of-surrogate-models" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>3 Categories of Surrogate Models</h2>
+<h2 id="3-categories-of-surrogate-models"><a name="user-content-3-categories-of-surrogate-models" href="#3-categories-of-surrogate-models" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3 Categories of Surrogate Models</h2>
 <ol>
 <li>Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots). </li>
 <li>Projection based methods, where the governing equations are projected onto a reduced dimension subspace characterized by a basis of orthonormal vectors. Typically divided into SVD and Krylov based methods. </li>
 <li>Multi-fidelity based surrogates, built by simplifying the underlying physics or reducing numerical resolution.</li>
 </ol>
-<h2 id="polynomial-chaos"><a name="user-content-polynomial-chaos" href="#polynomial-chaos" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Polynomial Chaos</h2>
+<h2 id="polynomial-chaos"><a name="user-content-polynomial-chaos" href="#polynomial-chaos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Polynomial Chaos</h2>
 <p>Let $(\Omega, \sigma, P)$ be a probability space where $\sigma$ is a $\sigma$-algebra on $\Omega$ and $P$ is a probability measure on $(\sigma, P)$.</p>
 <p>Any random variable $X: \Omega \rightarrow \mathbb{R}$ with finite variance (square integrable, $X \in L^2(\Omega)$) may be written as the polynomial chaos (PC) expansion of orthogonal polynomials $\Gamma_p$ </p>
 <p>$$\begin{align}<br />
@@ -1131,10 +1055,10 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 \end{equation}$$</p>
 <!-- \approx \sum_{k=0}^P \alpha_k \Psi_k(\boldsymbol\xi) -->
 
-<h2 id="uncertainty"><a name="user-content-uncertainty" href="#uncertainty" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Uncertainty</h2>
-<h2 id="structural-uncertainty"><a name="user-content-structural-uncertainty" href="#structural-uncertainty" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Structural Uncertainty</h2>
-<h2 id="diagnostics"><a name="user-content-diagnostics" href="#diagnostics" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>Diagnostics</h2>
-<h2 id="pc-emulator-of-groundwater-model-modflow"><a name="user-content-pc-emulator-of-groundwater-model-modflow" href="#pc-emulator-of-groundwater-model-modflow" class="headeranchor-link"  aria-hidden="true"><span class="headeranchor"></span></a>PC emulator of Groundwater model (MODFLOW)</h2>
+<h2 id="uncertainty"><a name="user-content-uncertainty" href="#uncertainty" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Uncertainty</h2>
+<h2 id="structural-uncertainty"><a name="user-content-structural-uncertainty" href="#structural-uncertainty" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Structural Uncertainty</h2>
+<h2 id="diagnostics"><a name="user-content-diagnostics" href="#diagnostics" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Diagnostics</h2>
+<h2 id="pc-emulator-of-groundwater-model-modflow"><a name="user-content-pc-emulator-of-groundwater-model-modflow" href="#pc-emulator-of-groundwater-model-modflow" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>PC emulator of Groundwater model (MODFLOW)</h2>
 <ul>
 <li>automated process using freely available, continental available datasets in variety of formats (shp, gdb, WFS)</li>
 <li>scripts to convert from formats to modflow inputs with examples of where to use parametes</li>

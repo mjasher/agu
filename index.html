@@ -6,189 +6,7 @@
 
 <link rel="stylesheet" href="third/leaflet-0.7.3.css">
 
-<style>
-
-
-@font-face {
-    font-family: 'latin_modern_roman10_regular';
-    src: url('fonts/lmroman10-regular-webfont.eot');
-    src: url('fonts/lmroman10-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/lmroman10-regular-webfont.woff') format('woff'),
-         url('fonts/lmroman10-regular-webfont.ttf') format('truetype'),
-         url('fonts/lmroman10-regular-webfont.svg#latin_modern_roman10_regular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-body{
-  font-family: latin_modern_roman10_regular, serif;
-}
-
-
-/*html,body{
-	width: 100%;
-  height: 100%;
-}*/
-
-.block{
-  width:40%;
-  margin: 5%;
-}
-
-.block-full{
-  width: 90%;
-  margin: 5%;
-}
-
-.block-half{
-  width: 50%;
-  margin: 0;
-}
-
-@media screen and (max-width: 700px) {
-  .block{
-    width:90%;
-    margin: 5%;
-  }
-  .block-half{
-    width: 50%;
-    margin: 0;
-  }
-}
-
-#feature_map, #modflow_map{
-  height: 700px; 
-}
-
-#title{
-    background-color: steelblue;
-  padding: 10px;
-}
-
-h1{
-  font-size: 200%;
-}
-
-h2{
-  font-size: 166%;
-}
-
-h3{
-  font-size: 133%;
-}
-
-svg{
-  /*shape-rendering: crispEdges;*/
-  /*shape-rendering: geometricPrecision;*/
-}
-
-th,td{ 
-  padding-left: 10px;  
-  padding-right: 10px;  
-}
-
-
-/*grouped bar */
-/*.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.bar {
-  fill: steelblue;
-}
-
-.x.axis path {
-  display: none;
-}
-
-svg{
-  font: 10px sans-serif;
-}*/
-
-/*density*/
-/*
-.bar {
-  fill: #bbb;
-  shape-rendering: crispEdges;
-}
-
-.line {
-  fill: none;
-  stroke: #000;
-  stroke-width: 1.5px;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.y.axis path {
-  display: none;
-}*/
-
-/*scatter*/
-/*svg {
-  padding: 10px;
-}*/
-
-/*.axis,
-.frame {
-  shape-rendering: crispEdges;
-}
-
-.axis line {
-  stroke: #ddd;
-}
-
-.axis path {
-  display: none;
-}
-*/
-/*.frame {
-  fill: none;
-  stroke: #aaa;
-}*/
-/*
-circle {
-  fill-opacity: .7;
-}
-
-circle.hidden {
-  fill: #ccc !important;
-}
-
-.extent {
-  fill: #000;
-  fill-opacity: .125;
-  stroke: #fff;
-}*/
-
-#layer2{
-    font: 10px serif;
-}
-
-#surrogate_models img{
-  width: 100%;
-  height: auto;
-}
-#surrogate_models .block-half{
-  padding: 10px;
-}
-
-.legend_square{
-  height: 20px;
-  width: 20px;
-  display: inline-block;
-}
-
-</style>
+<link rel="stylesheet" href="main.css">
 
 
 <!-- 
@@ -211,6 +29,12 @@ for(var i=0;i<svgs.length;i++){
   document.body.removeChild(downloadLink);
 
 }
+
+for f in *.svg
+do 
+  # echo "Processing $f file.."; 
+  rsvg-convert -f pdf -o "${f%.*}.pdf" $f;
+done
 
 
 
@@ -239,42 +63,41 @@ for(var i=0;i<svgs.length;i++){
   <script src="third/MathJax/MathJax.js"></script>
   <!-- <script src="MathJax/MathJax.js?config=TeX-AMS_HTML"></script>  -->
 
-<div class="block-group">
-  <div id='title' class="block-full">
+<div id='title' class="block-group">
+  <div  class="block-full">
     <h1>  Characterizing the Effect of Different Sources of Uncertainty on Surrogates of Groundwater Models </h1>
     <h3>M. J. Asher, B. F. W. Croke, A. J. Jakeman, and L. Peeters </h3>
   </div>
 </div>
 
-<div class="block-group">
-  <!-- <div class="block" id="uncertainty"></div> -->
+<!-- <div class="block-group">
+  <div class="block" id="uncertainty"></div>
   <div class="block">
 
+    <h2>The role of emulation</h2>
+    <ol>
+      <li>Understanding one’s model better through the sensitivities (etc) that PCE provides, and as an easier screening step before full uncertainty quantification</li>
+      <li>As a way of making groundwater models run faster and/or be more simply placed/coded with an integrated/coupled model that might include economics, ecology and other component submodels</li>
+    </ol>
 
-    <h2> Quantifying uncertainty from different locations </h2>
-    <ul>
-      <li> Beyond inputs and parameters of model code, we parameterize key choices during conceptualization </li>
-      <li> Conceptualization work-flow (data to model inputs) is automated</li>
-      <li> Computational time reduced using surrogate model </li>
-      <li> Case study: Polynomial Chaos surrogate of MODFLOW model </li>
-      <li> Inputs: parameters, inputs, boundary conditions, domain, locations </li>
-      <li> Outputs: head and flux to river </li>
-    </ul>
 
-    <h2> Surrogate effectiveness </h2>
-    <ul>
-      <li> Black box method with significant computational savings</li>
-      <li> Speedup and accuracy reduced with parameter interactions </li>
-      <li> Cannot be used outside of calibration range</li>
-      <li> Useful as a sensitivity analysis method </li>
-    </ul>
+
+    <h2>Surrogate effectiveness</h2>
+  <ul>
+  <li><p>Black box method</p></li>
+  <li><p>Accurate emulation on a range of parameters</p></li>
+  <li><p>Significantly reduced computational time</p></li>
+  <li><p>Simplified interface for integrated (coupled) modelling</p></li>
+  <li><p>Provides sensitivity analysis (can be used for screening)</p></li>
+  </ul>
+
   </div>
   <div class="block"> 
     <h2>The nature of uncertainty</h2>
     <p> (Walker et al. 2003)</p>
     <img src="opt_uncertainty.svg" alt=""> 
   </div>
-</div>
+</div> -->
 
 <!-- <div class="block-group">
   <div class="block-full" id="scatter"></div>
@@ -282,10 +105,35 @@ for(var i=0;i<svgs.length;i++){
 
 
 <div class='block-group'>
+
+<div class="block">
+  <h2>Summary</h2>
+  <ul>
+    <li> Polynomial Chaos emulates input/output relationship for a range of "complex" model inputs</li>
+    <li> Significantly reduces runtime</li>
+    <li> Simplifies interface for use in integrated modelling </li>
+    <li> Provides sensitivity analysis as a by-product </li>
+    <li> Case study with MODFLOW groundwater flow model as "complex" model</li>
+  </ul>
+</div>
+
   <div class="block" id="surrogate_models">
-    
 <h2>Three categories of Surrogate models</h2>
-  <div class='block-group'>
+
+<p> Model <span class="LaTeX">$$\textbf{h}=F(\boldsymbol\theta)$$</span></p>
+<dl>
+<dt>Data-driven surrogates</dt>
+<dd><p>Statistical approximation of <span class="LaTeX">$\boldsymbol\theta$</span> to <span class="LaTeX">$\textbf{h}$</span> relationship.</p>
+</dd>
+<dt>Projection based methods</dt>
+<dd><p>Replace <span class="LaTeX">$\textbf{h}$</span> with <span class="LaTeX">$\boldsymbol\Phi \textbf{h}_r$</span> (project onto basis of orthonormal vectors).</p>
+</dd>
+<dt>Multi-fidelity based surrogates</dt>
+<dd><p>Simplify physics or reduce numerical resolution.</p>
+</dd>
+</dl>
+
+<!--   <div class='block-group'>
     <div class='block block-half'> 1. Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots).</div>
     <div class='block block-half'> <img src="opt_black_box.svg" alt=""> </div>
   </div>
@@ -296,8 +144,7 @@ for(var i=0;i<svgs.length;i++){
   <div class='block-group'>
     <div class='block block-half'> 3. Multi-fidelity based surrogates, built by simplifying the underlying physics or reducing numerical resolution. </div>
     <div class='block block-half'> <img src="opt_hierarchical.svg" alt=""> </div>
-
-  </div>
+  </div> -->
 
 <!--   <ol>
   <li>Data-driven surrogates involving statistical approximations of the complex model output calibrated on a set of inputs and outputs of the complex model (snapshots). </li>
@@ -311,21 +158,54 @@ for(var i=0;i<svgs.length;i++){
   </div>
 
   <div class="block" id='polynomial_chaos' >
-    <h2>Polynomial Chaos</h2>
+
+
+<h2>Polynomial Chaos </h2>
+<p> Let <span class="LaTeX">$(\Theta, \sigma, \mathbb{P})$</span> be a probability space where <span class="LaTeX">$\sigma$</span> is a <span class="LaTeX">$\sigma$</span>-algebra on <span class="LaTeX">$\Theta$</span> and <span class="LaTeX">$ \mathbb{P}$</span> is a probability measure on <span class="LaTeX">$(\Theta,\sigma)$</span>. Let <span class="LaTeX">$\{ \xi_i \}_{i=1} ^\infty$</span> on <span class="LaTeX">$\Theta$</span> be independent Gaussian variables.</p>
+<p>Any random variable <span class="LaTeX">$F: \Theta \rightarrow \mathbb{R}$</span> with finite variance (<span class="LaTeX">$X \in L^2(\Theta)$</span>) may be written as the Polynomial Chaos expansion</p>
+<p><span class="LaTeX">$$\begin{aligned}
+ F(\boldsymbol\theta) &amp;\approx a_0 \Gamma_0 + \sum_{i_1=1}^\infty a_{i_1} \Gamma_1(\xi_{i_1}) + \sum_{i_1=1}^\infty \sum_{i_2=1}^{i_1} a_{i_1i_2} \Gamma_2(\xi_{i_1},\xi_{i_2})+ \cdots  \\
+ &amp;= \sum_{\vert k \vert=0}^K \alpha_k \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N) 
+ \end{aligned}$$</span></p>
+<p>where <span class="LaTeX">$\Gamma_p$</span> (or <span class="LaTeX">$\Psi_k$</span>) is the Hermite polynomial of order <span class="LaTeX">$p$</span> satisfying the orthogonality condition</p>
+<p><span class="LaTeX">$$\int \Gamma_i (\boldsymbol\xi) \Gamma_j (\boldsymbol\xi) \rho(\boldsymbol\xi) d\boldsymbol\xi = \delta_{i,j}.$$</span></p>
+<!-- <p><span>Practical Polynomial Chaos</span>  -->
+
+</div>
+<div class="block">
+<h2>In practice </h2>
+For computation we use
+<ul>
+<li><p>a dimension of <span class="LaTeX">$N$</span> random variables <span class="LaTeX">$\{ \xi_i \}_{i=1} ^N$</span></p></li>
+<li><p>a truncated polynomial order of <span class="LaTeX">$P$</span></p></li>
+<li><p>the image probability space</p></li>
+<li><p>if relevant, separate spatial, <span class="LaTeX">$x$</span>, and temporal, <span class="LaTeX">$t$</span>, variables</p></li>
+</ul>
+<p>which gives the PC expansion</p>
+<p><span class="LaTeX">$$F(x,t,\boldsymbol\xi) = \sum_{\vert k \vert=0}^K \alpha_k(x,t) \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N)$$</span></p>
+<p>with multi index of order <span class="LaTeX">$K = \frac{(N+P)!}{N!P!} -1.$</span></p>
+
+
+    <!-- <h2>Polynomial Chaos</h2>
     <p>(Najm 2009)</p>
-    <p>Chosen because it can be broadly applied to any input-output relationship, results in significant runtime reduction, and generates sensitivities during calibration.</p>
-    <p>Let $(\Omega, \sigma, P)$ be a probability space where $\sigma$ is a $\sigma$-algebra on $\Omega$ and $P$ is a probability measure on $(\sigma, P)$.</p>
+    <p>Chosen because it can be broadly applied to any input-output relationship, results in significant runtime reduction, and generates sensitivities and statistical properties during calibration.</p>
+    <p>Let $(\Omega, \sigma, P)$ be a probability space where $\sigma$ is a $\sigma$-algebra on $\Omega$ and $P$ is a probability measure on $(\Omega,\sigma)$.</p>
 <p>Any random variable $X: \Omega \rightarrow \mathbb{R}$ with finite variance (square integrable, $X \in L^2(\Omega)$) may be written as the polynomial chaos (PC) expansion of orthogonal polynomials $\Gamma_p$ </p>
 <p>$$\begin{align}<br />
 X(\omega) &amp;= a_0 \Gamma_0 + \sum_{i_1=1}^\infty a_{i_1} \Gamma_1(\xi_{i_1}) + \sum_{i_1=1}^\infty \sum_{i_2=1}^{i_1} a_{i_1i_2} \Gamma_2(\xi_{i_1},\xi_{i_2})+ \cdots \notag \newline<br />
 &amp;= \sum_{k=0}^\infty \alpha_k \Psi_k(\xi_1,\xi_2,\cdots) <br />
 \end{align}$$</p>
-<p>Since ${\xi_i}_{i=1}^\infty$ are Gaussian, this orthogonality condition requires $\Gamma_p$ (or equivalently $\Psi_k$ ) to be multivariate Hermite polynomials. Other polynomials can be used with other distributions.</p>
-<p>For random fields (processes) including spatial $x$ and temporal $t$ <br />
+<p>If ${\xi_i}_{i=1}^\infty$ are Gaussian, the orthogonality condition requires $\Gamma_p$ (or equivalently $\Psi_k$ ) to be multivariate Hermite polynomials. Other polynomials can be used with other distributions.</p>
+<p>For random fields (processes) including spatial, $x$ and temporal, $t$ variables <br />
 $$\begin{equation}<br />
 X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdots). <br />
-\end{equation}$$</p>
+\end{equation}$$</p> -->
+
   </div>
+
+
+
+
   <div id="uncertainty"></div>
   <div id="structural_uncertainty"></div>
   <div id="diagnostics">
@@ -354,17 +234,28 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 
 
 <div class="block-group">
-  <div class="block-full">
-    <h1>  Case Study </h1>
+  <div class="block">
+    <h2>  Groundwater flow case study (MODFLOW) </h2>
+    <ul>
+<li><p>Automate the conceptualization work-flow (data to MODFLOW inputs)</p></li>
+<li><p>Beyond inputs and parameters of model code, we parameterize key choices during conceptualization</p></li>
+<li><p>Inputs: parameters, inputs, boundary conditions (Dirichlet ad Neumann), domain, locations</p></li>
+<li><p>Outputs: head and flux to river</p></li>
+<li><p>Karhunen-Loève parameterization for spatially distributed parameters</p></li>
+<li><p>Polynomial Chaos surrogate for sensitivity analysis and runtime reduction</p></li>
+</ul>
+</div>
+<div class="block">
+    <h2> Site details </h2>
+    <p> Alluvial plain with heterogeneous conductivity, a perennial river, periodic recharge, and extraction wells.</p>
+    <p> Data from <a href="http://www.ga.gov.au/">Geoscience Australia</a>, the <a href="http://www.bom.gov.au/">Bureau of Meteorology</a>, and the <a href="http://realtimedata.water.nsw.gov.au/water.stm"> NSW Office of Water</a>.</p>
   </div>
 </div>
-
 
 
 <div class="block-group">
   <div class="block" >
     <h2> The Peel River</h2>
-    <p> Alluvial plain with perennial river, periodic recharge and extraction wells.</p>
     <div id="feature_map"></div>
   </div>
   <div class="block">
@@ -372,16 +263,14 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
     <div id="modflow_map"></div>
   </div>
 </div>
-
-
-
+d
 
 
 <div class="block-group">
     <!-- <div class="block" id="uncertainty"></div> -->
   <div class="block">
-    <h2> Parameter sensitivites </h2>
-    <p>Computed using Polynomial Chaos expansion. Equal values for "Total" and "Sobol" indices indicates limited parameter interaction. PC complexity scales exponentially with the number of relevant interactions.</p>
+    <h2> Parameter sensitivities </h2>
+    <p>Sensitivity of head at four locations, computed using Polynomial Chaos expansion. Equal values for "Total" and "Sobol" indices indicate limited parameter interaction. PC complexity scales exponentially with the number of relevant interactions.</p>
     <div> 
       <div class='legend_square' style="background-color: steelblue;"></div> Sobol Index
       <div class='legend_square' style="background-color: darkred;"></div> Total Index
@@ -390,6 +279,7 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
   </div>
   <div class="block">
     <h2> Output head distribution </h2>
+    Computed by complex model and surrogate at four locations.
     <div class="block-group" id="density"></div>
   </div>
 
@@ -399,26 +289,72 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 
   <div class="block">
     <h2> Surrogate Performance </h2>
+    Complex v Surrogate computed head at four locations.
     <div id="scatter_legend"></div>
     <div class="block-group" id="scatter"></div>
   </div>
 
   <div class="block">
     <h2>Runtime Reduction</h2>
+    Complex runtimes include a significant amount of I/O (reading and writing files).
     <table id='runtime'>
       <tr>
-        <th> Model size</th>
-        <th> Build time (min) </th>
-        <th> On-line runtime reduction (%) </th>
+        <th> Model size (cells)</th>
+        <th> Offline build time (min) </th>
+        <th> Complex/Surrogate online runtime </th>
+      </tr>
+
+      <tr>
+        <td> 10x20  </td>
+        <td> 2.02   </td>
+        <td> 26,109 </td>
+
+      </tr>
+
+      <tr>
+        <td> 15x35 </td>
+        <td> 4.10  </td>
+        <td> 67,003</td>
+      </tr>
+
+
+      <tr>
+        <td> 30x60 </td>
+        <td> 13  </td>
+        <td> 559,586 </td>
       </tr>
 
     </table>
-  <!--     <h2>Further Work</h2>
-      <ul>
-        <li></li>
-
-      </ul> -->
   </div>
+</div>
+
+<div class="block-group">
+  <div class="block">
+    <h2>Why Polynomial Chaos? </h2>
+    <ul>
+    <li><p>Can be calibrated using both intrusive (Galerkin Projection) and non-intrusive, black-box (Stochastic Collocation) methods</p></li>
+    <li><p>Applies to a number of continuous and discrete prior distributions (Wiener-Askey scheme)</p></li>
+    <li><p>Statistical information including Sobol sensitivity indices are a by-product (can be used for parameter screening)</p></li>
+    <li><p>Significant runtime reductions for a moderate (<span class="LaTeX">$&lt;50$</span>) number of parameters</p></li>
+    <li><p>Promise for larger numbers of parameters due to the “blessing of dimensionality” (smoothness for high dimensions)</p></li>
+    <li><p>Simplified interface for integrated (coupled) modelling</p></li>
+    </ul>
+  </div>
+
+
+  <div class="block">
+
+    <h2>Challenges</h2>
+    <ul>
+    <li><p>Estimating Karhunen-Loève parameters</p></li>
+    <li><p>Using local bases to cope with discontinuities</p></li>
+    <li><p>Speedup and accuracy diminish with parameter interactions</p></li>
+    <li><p>Surrogate cannot be used outside of calibration range</p></li>
+    <li><p>Robustness of “complex” model</p></li>
+    </ul>
+    
+  </div>
+
 </div>
 
 
@@ -438,20 +374,24 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 	<script>
 
 var color = d3.scale.category10().range();
-d3.select("#scatter_legend").html("<div class='legend_square' style='background-color:" + color[0] + ";'></div> within calibration range"
-    +" <div class='legend_square' style='background-color:" + color[1] + ";'></div> expanded range");
+// d3.select("#scatter_legend").html("<div class='legend_square' style='background-color:" + color[0] + ";'></div> within calibration range"
+//     +" <div class='legend_square' style='background-color:" + color[1] + ";'></div> expanded range");
+
+
 
 d3.json("data/openturns_pce_10_20.json", function(error, data) {
+// d3.json("data/openturns_pce_15_35.json", function(error, data) {
+// d3.json("data/openturns_pce.json", function(error, data) {
   
       // <tr style="text-align: right;">
       //   <td> 100x100 </td>
       //   <td> 140 </td>
       //   <td> 99% </td>
       // </tr>
-  var runtime = d3.select("#runtime").append('tr').style('text-align','right');
-  runtime.append('td').html('10x20');
-  runtime.append('td').html((data['building_time']/60).toFixed(2));
-  runtime.append('td').html((data['average_run_time']/data['average_surrogate_run_time']).toFixed(2));
+  // var runtime = d3.select("#runtime").append('tr').style('text-align','right');
+  // runtime.append('td').html('10x20');
+  // runtime.append('td').html((data['building_time']/60).toFixed(2));
+  // runtime.append('td').html((data['average_run_time']/data['average_surrogate_run_time']).toFixed(2));
 
   var complex = data["sample_Y"];
   var meta = data["sample_YPC"];
@@ -475,13 +415,13 @@ d3.json("data/openturns_pce_10_20.json", function(error, data) {
                       z: 'calibration' }
             });
 
-            d3.range(num_samples).forEach(function(j){ 
-              scatter_data.push({
-                x: data["extended_sample_Y"][j][i], 
-                y: data["extended_sample_YPC"][j][i],
-                z: 'extended'
-              });
-            });
+            // d3.range(num_samples).forEach(function(j){ 
+            //   scatter_data.push({
+            //     x: data["extended_sample_Y"][j][i], 
+            //     y: data["extended_sample_YPC"][j][i],
+            //     z: 'extended'
+            //   });
+            // });
 
           scatter(d3.select("#scatter").append('div').attr('class','block block-half'), scatter_data);
 
