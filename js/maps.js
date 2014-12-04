@@ -138,10 +138,31 @@ d3.json('data/wells.json', function(data){
         });
       }
     }).addTo(map), 
-  "NSW Water sites");
+  "Wells");
 
 });
 
+
+// d3.json('data/monitoring_wells.json', function(data){
+
+//   control.addOverlay(
+//     L.geoJson(data, {
+//       onEachFeature: onEachFeature,
+
+//       pointToLayer: function (feature, latlng) {
+//         return L.circleMarker(latlng, {
+//           radius: 6,
+//           fillColor: "#1a1a1a",
+//           color: "green",
+//           weight: 1,
+//           opacity: 1,
+//           fillOpacity: 0.8
+//         });
+//       }
+//     }).addTo(map), 
+//   "Observation wells");
+
+// });
 
 
 /* -----------------------------------------------

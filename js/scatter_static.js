@@ -60,7 +60,7 @@ function scatter(el, scatter_data){
 
   svg.selectAll('.axis line').style('stroke', '#ddd');
   svg.selectAll('.axis path').style('display', 'none');
-  svg.selectAll('.frame').style({'sroke': '#aaa', 'fill': 'none'});
+  svg.selectAll('.frame').style({'stroke': '#aaa', 'fill': 'none'});
   svg.selectAll('.circle').style('fill-opacity',.7);
   svg.selectAll('.extent').style({ 'fill': '#000', 'fill-opacity': .125, 'stroke': '#fff' });
   svg.style('font','10px sans-serif')

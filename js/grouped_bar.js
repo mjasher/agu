@@ -3,7 +3,7 @@
 function grouped_bar(el, data){
 
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 40},
+  var margin = {top: 20, right: 20, bottom: 60, left: 40},
       width = el.node().clientWidth - margin.left - margin.right,
       // height = 400 - margin.top - margin.bottom;
       height = width - margin.top - margin.bottom;
@@ -68,7 +68,8 @@ function grouped_bar(el, data){
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
         .selectAll('text')
-        .attr("transform", "translate(0,-30)rotate(-45)");
+        .style("text-anchor", "end")
+        .attr("transform", "translate(0,-5)rotate(-45)");
 
     svg.append("g")
         .attr("class", "y axis")

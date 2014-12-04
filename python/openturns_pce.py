@@ -221,14 +221,16 @@ print 'times', t1-t0, t2-t1, (t1-t0)/(t2-t1)
 print "building time", building_time
 
 
-extended_samplesize = 50
-extended_sample_X = extended_vectX.getSample(extended_samplesize)
+# extended_samplesize = 50
+# extended_sample_X = extended_vectX.getSample(extended_samplesize)
 
-t0 = time.time()
-extended_sample_Y = myModel(extended_sample_X)
-t1 = time.time()
+# t0 = time.time()
+# extended_sample_Y = myModel(extended_sample_X)
+# t1 = time.time()
 
-extended_sample_YPC = truss_model_PC(sample_X)
+# extended_sample_YPC = truss_model_PC(sample_X)
+extended_sample_Y = np.ones((2,2))
+extended_sample_YPC = np.ones((2,2))
 
 
 np.savez("openturns_results.npz", average_run_time_just_mf = average_run_time_just_mf,

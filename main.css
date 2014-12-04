@@ -1,0 +1,194 @@
+
+
+@font-face {
+    font-family: 'latin_modern_roman10_regular';
+    src: url('fonts/lmroman10-regular-webfont.eot');
+    src: url('fonts/lmroman10-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/lmroman10-regular-webfont.woff') format('woff'),
+         url('fonts/lmroman10-regular-webfont.ttf') format('truetype'),
+         url('fonts/lmroman10-regular-webfont.svg#latin_modern_roman10_regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body{
+  font-family: latin_modern_roman10_regular, serif;
+}
+
+
+/*html,body{
+	width: 100%;
+  height: 100%;
+}*/
+
+.block{
+  width:40%;
+  margin: 5%;
+}
+
+.block-full{
+  width: 90%;
+  margin: 5%;
+}
+
+.block-half{
+  width: 50%;
+  margin: 0;
+}
+
+@media screen and (max-width: 700px) {
+  .block{
+    width:90%;
+    margin: 5%;
+  }
+  .block-half{
+    width: 50%;
+    margin: 0;
+  }
+}
+
+#feature_map, #modflow_map{
+  height: 700px; 
+}
+
+#title{
+  background-color: steelblue;
+  padding: 10px;
+  /*margin: -5%;*/
+}
+
+h1{
+  font-size: 200%;
+}
+
+h2{
+  font-size: 166%;
+}
+
+h3{
+  font-size: 133%;
+}
+
+svg{
+  /*shape-rendering: crispEdges;*/
+  /*shape-rendering: geometricPrecision;*/
+}
+
+th,td{ 
+  padding-left: 10px;  
+  padding-right: 10px;  
+}
+
+
+/*grouped bar */
+/*.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+
+svg{
+  font: 10px sans-serif;
+}*/
+
+/*density*/
+/*
+.bar {
+  fill: #bbb;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.y.axis path {
+  display: none;
+}*/
+
+/*scatter*/
+/*svg {
+  padding: 10px;
+}*/
+
+/*.axis,
+.frame {
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  stroke: #ddd;
+}
+
+.axis path {
+  display: none;
+}
+*/
+/*.frame {
+  fill: none;
+  stroke: #aaa;
+}*/
+/*
+circle {
+  fill-opacity: .7;
+}
+
+circle.hidden {
+  fill: #ccc !important;
+}
+
+.extent {
+  fill: #000;
+  fill-opacity: .125;
+  stroke: #fff;
+}*/
+
+#layer2{
+    font: 10px serif;
+}
+
+#surrogate_models img{
+  width: 100%;
+  height: auto;
+}
+#surrogate_models .block-half{
+  padding: 10px;
+}
+
+.legend_square{
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+}
+
+
+#runtime td{
+  text-align:right;
+}
+
+
+dt{
+  font-weight: bold;
+}
+dd{
+  margin-left: 40px;
+}

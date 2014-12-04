@@ -50,6 +50,18 @@ wells = [
     [ 150.69695663871244, -31.005293991028097]
 ]
 
+import json
+data_dir = '/home/mikey/Dropbox/pce/agu/data/'
+with open(data_dir+'monitoring_wells.json', 'w') as f:
+    f.write(json.dumps( { "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": p},
+        "properties": {"index": i},
+        } for i,p in enumerate(wells) ]
+     } ))
+
+
 x_min = bounding_box[0][1]
 x_max = bounding_box[1][1]
 y_min = bounding_box[1][0]
@@ -85,7 +97,7 @@ rch_init = final_flopy_api.rch_init(nlay, nrow, ncol, bounding_box)
 riv_init = final_flopy_api.riv_init(nlay, nrow, ncol, bounding_box)
 
 p_names = [
-            "move well location 1", "move well location 2", "move well location 3", "move well location 4",
+            "well location 1", "well location 2", "well location 3", "well location 4",
             "hk KLE mode 1","hk KLE mode 2","hk KLE mode 3",
             "well rate 1","well rate 2","well rate 3",
             "stage height 1","stage height 2","stage height 3",
@@ -121,13 +133,14 @@ def f( x ):
     strt = np.ones((nlay, nrow, ncol), dtype=np.float32)
     strt[:, :, 0] = 10.
     strt[:, :, -1] = 0.
-    # move_boundary = 2*par[0:4]
-    move_boundary = np.zeros((4))
+    move_boundary = 1.0*par[0:4]
+    # move_boundary = np.zeros((4))
     bas_perturb = final_flopy_api.bas_perturb(bas_init, mf, strt, nrow, ncol, bounding_box, move_boundary = move_boundary)
     bas_perturb.write_file()
 
-    kle_modes = par[4:7]
-    assert len(kle_modes) ==  n_var_upw
+    # kle_modes = par[4:7]
+    # assert len(kle_modes) ==  n_var_upw
+    kle_modes = np.ones((3))
     upw_perturb = final_flopy_api.upw_perturb(upw_init, mf, kle_modes = kle_modes)
     upw_perturb.write_file()
     # print upw_perturb.hk.array
@@ -135,6 +148,7 @@ def f( x ):
     wel_rate = -100*par[7:10]
     assert len(wel_rate) == nper
     move_boundary = 2*par[0:4]
+    move_boundary = np.ones(4)
     wel_perturb = final_flopy_api.wel_perturb(wel_init, mf, nper, rates = wel_rate, move_boundary = move_boundary)
     wel_perturb.write_file()
 
