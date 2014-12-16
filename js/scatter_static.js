@@ -5,14 +5,14 @@ function scatter(el, scatter_data){
   var color = d3.scale.category10();
 
   // var width = document.getElementById('scatter').clientWidth,
-  var width = el.node().clientWidth,
+  var width = 0.75*el.node().clientWidth,
       padding = 50;
 
   var x = d3.scale.linear()
-      .domain(d3.extent(scatter_data.map(function(d){ return d.x })))
+      .domain(d3.extent(scatter_data.data.map(function(d){ return d.x })))
       .range([padding / 2, width - padding / 2])
   var y = d3.scale.linear()
-      .domain(d3.extent(scatter_data.map(function(d){ return d.y })))
+      .domain(d3.extent(scatter_data.data.map(function(d){ return d.y })))
       .range([width - padding / 2, padding / 2]);
 
   var xAxis = d3.svg.axis()
@@ -50,7 +50,7 @@ function scatter(el, scatter_data){
         .attr("height", width - padding);
 
   svg.selectAll("circle")
-        .data(scatter_data)
+        .data(scatter_data.data)
       .enter().append("circle")
         .attr("cx", function(d) { return x(d.x); })
         .attr("cy", function(d) { return y(d.y); })
@@ -58,12 +58,22 @@ function scatter(el, scatter_data){
         .style("fill", function(d) { return color(d.z); });
 
 
+
+  svg.append('text').text(scatter_data.labels.x).style("text-anchor", "middle").attr("transform", "translate(" + (width/2) + "," + (width-30) + ")");
+  svg.append('text').text(scatter_data.labels.y).style("text-anchor", "middle").attr("transform", "translate(" + 40 + "," + (width/2) + ")rotate(-90)");
+  svg.append('text').text(scatter_data.labels.title).style("text-anchor", "middle").style('font','14px sans-serif').attr("transform", "translate(" + (width/2) + "," + 15 + ")");
+
+
+
+// embed styles so we can download svg 
   svg.selectAll('.axis line').style('stroke', '#ddd');
   svg.selectAll('.axis path').style('display', 'none');
   svg.selectAll('.frame').style({'stroke': '#aaa', 'fill': 'none'});
   svg.selectAll('.circle').style('fill-opacity',.7);
   svg.selectAll('.extent').style({ 'fill': '#000', 'fill-opacity': .125, 'stroke': '#fff' });
-  svg.style('font','10px sans-serif')
+  svg.style('font','10px sans-serif');
+
+
 
 // .axis,
 // .frame {

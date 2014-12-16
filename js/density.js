@@ -11,7 +11,7 @@ function density(el, faithful){
 
 
   var x = d3.scale.linear()
-      .domain(d3.extent(faithful))
+      .domain(d3.extent(faithful.data))
       .range([0, width]);
 
   var y = d3.scale.linear()
@@ -56,8 +56,8 @@ function density(el, faithful){
       .attr("class", "y axis")
       .call(yAxis);
 
-  // d3.json("data/density_demo.json", function(error, faithful) {
-    var data = histogram(faithful),
+  // d3.json("data/density_demo.json", function(error, faithful.data) {
+    var data = histogram(faithful.data),
         kde = kernelDensityEstimator(epanechnikovKernel(1.1), x.ticks(100));
 
     svg.selectAll(".bar")
@@ -70,12 +70,13 @@ function density(el, faithful){
         .attr("height", function(d) { return height - y(d.y); });
 
     svg.append("path")
-        .datum(kde(faithful))
+        .datum(kde(faithful.data))
         .attr("class", "line")
         .attr("d", line);
   // });
 
 
+  svg.append('text').text(faithful.labels.title).style("text-anchor", "middle").style('font','14px sans-serif').attr("transform", "translate(" + (width/2) + "," + 15 + ")");
 
 
   svg.selectAll('.bar').style({ 'fill': '#bbb', 'shape-rendering': 'crispEdges' });

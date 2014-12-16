@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="third/pocketgrid.css">
 
 <link rel="stylesheet" href="third/leaflet-0.7.3.css">
+<link rel="stylesheet" href="third/leaflet.label.css">
 
 <link rel="stylesheet" href="main.css">
 
@@ -161,28 +162,32 @@ done
 
 
 <h2>Polynomial Chaos </h2>
-<p> Let <span class="LaTeX">$(\Theta, \sigma, \mathbb{P})$</span> be a probability space where <span class="LaTeX">$\sigma$</span> is a <span class="LaTeX">$\sigma$</span>-algebra on <span class="LaTeX">$\Theta$</span> and <span class="LaTeX">$ \mathbb{P}$</span> is a probability measure on <span class="LaTeX">$(\Theta,\sigma)$</span>. Let <span class="LaTeX">$\{ \xi_i \}_{i=1} ^\infty$</span> on <span class="LaTeX">$\Theta$</span> be independent Gaussian variables.</p>
-<p>Any random variable <span class="LaTeX">$F: \Theta \rightarrow \mathbb{R}$</span> with finite variance (<span class="LaTeX">$X \in L^2(\Theta)$</span>) may be written as the Polynomial Chaos expansion</p>
-<p><span class="LaTeX">$$\begin{aligned}
- F(\boldsymbol\theta) &amp;\approx a_0 \Gamma_0 + \sum_{i_1=1}^\infty a_{i_1} \Gamma_1(\xi_{i_1}) + \sum_{i_1=1}^\infty \sum_{i_2=1}^{i_1} a_{i_1i_2} \Gamma_2(\xi_{i_1},\xi_{i_2})+ \cdots  \\
- &amp;= \sum_{\vert k \vert=0}^K \alpha_k \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N) 
- \end{aligned}$$</span></p>
-<p>where <span class="LaTeX">$\Gamma_p$</span> (or <span class="LaTeX">$\Psi_k$</span>) is the Hermite polynomial of order <span class="LaTeX">$p$</span> satisfying the orthogonality condition</p>
-<p><span class="LaTeX">$$\int \Gamma_i (\boldsymbol\xi) \Gamma_j (\boldsymbol\xi) \rho(\boldsymbol\xi) d\boldsymbol\xi = \delta_{i,j}.$$</span></p>
-<!-- <p><span>Practical Polynomial Chaos</span>  -->
+Let $(\Theta, \sigma, \mathbb{P})$ be a probability space where $\sigma$ is a $\sigma$-algebra on $\Theta$ and $ \mathbb{P}$ is a probability
+measure on $(\Theta,\sigma)$. 
 
+Any random variable $F: \Theta \rightarrow \mathbb{R}$ with finite variance ($X \in L^2(\Theta)$) may be written as the PCE
+ \begin{align} 
+ F(\boldsymbol\theta) &= a_0 \Gamma_0 + \sum_{i_1=1}^\infty a_{i_1} \Gamma_1(\xi_{i_1}) + \sum_{i_1=1}^\infty \sum_{i_2=1}^{i_1} a_{i_1i_2} \Gamma_2(\xi_{i_1},\xi_{i_2})+ \cdots  
+ % &\approx \sum_{\vert k \vert=0}^K \alpha_k \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N) 
+ \end{align}  
+
+ where $\{ \xi_i \}_{i=1} ^\infty$ on $\Theta$ are independent Gaussian variables and $\Gamma_p$ (or $\Psi_k$) is the Hermite polynomial of order $p$ satisfying the orthogonality condition
+
+ $$ \int \Gamma_i (\boldsymbol\xi) \Gamma_j (\boldsymbol\xi) \rho(\boldsymbol\xi) d\boldsymbol\xi = \delta_{i,j}.$$
 </div>
 <div class="block">
 <h2>In practice </h2>
-For computation we use
+
+
+For computational problems, we 
 <ul>
-<li><p>a dimension of <span class="LaTeX">$N$</span> random variables <span class="LaTeX">$\{ \xi_i \}_{i=1} ^N$</span></p></li>
-<li><p>a truncated polynomial order of <span class="LaTeX">$P$</span></p></li>
-<li><p>the image probability space</p></li>
-<li><p>if relevant, separate spatial, <span class="LaTeX">$x$</span>, and temporal, <span class="LaTeX">$t$</span>, variables</p></li>
+<li><p>have a dimension of $N$ random variables $\{ \xi_i \}_{i=1} ^N$</p></li>
+<li><p>use a truncated polynomial order of $P$ interaction terms</p></li>
+<!-- <li><p>the image probability space</p></li> -->
+<li><p>include separate spatial, $x$, and temporal, $t$, variables (if relevant)</p></li>
 </ul>
-<p>which gives the PC expansion</p>
-<p><span class="LaTeX">$$F(x,t,\boldsymbol\xi) = \sum_{\vert k \vert=0}^K \alpha_k(x,t) \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N)$$</span></p>
+<p>which gives the PCE</p>
+<p><span class="LaTeX">$$F(x,t,\boldsymbol\xi) \approx \sum_{\vert k \vert=0}^K \alpha_k(x,t) \Psi_k(\xi_{1},\xi_{2},\cdots, \xi_N)$$</span></p>
 <p>with multi index of order <span class="LaTeX">$K = \frac{(N+P)!}{N!P!} -1.$</span></p>
 
 
@@ -235,27 +240,55 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
 
 <div class="block-group">
   <div class="block">
-    <h2>  Groundwater flow case study (MODFLOW) </h2>
-    <ul>
-<li><p>Automate the conceptualization work-flow (data to MODFLOW inputs)</p></li>
-<li><p>Beyond inputs and parameters of model code, we parameterize key choices during conceptualization</p></li>
-<li><p>Inputs: parameters, inputs, boundary conditions (Dirichlet and Neumann), domain, locations</p></li>
-<li><p>Outputs: head and flux to river</p></li>
-<li><p>Karhunen-Loève parameterization for spatially distributed parameters</p></li>
-<li><p>Polynomial Chaos surrogate for sensitivity analysis and runtime reduction</p></li>
-</ul>
+    <h2>  Groundwater flow  </h2>
+    
+    The complex model solves the groundwater flow equation 
+    \begin{equation*} \label{panday4} 
+      \nabla \cdot ( K \nabla h ) = S \frac{\partial h}{\partial t} + q.
+    \end{equation*}
+    for head $h$, with initial condition
+    $$h(x,0) = h_0(x)$$
+    and boundary conditions
+    \begin{align*}
+      h(x,t) &= h_D(x,t) \qquad \text{on Dirichlet boundary and} \\
+      ( K \nabla h ) \cdot \textbf{n} &= q_N(x,t) \qquad \text{on Neumann boundary}
+    \end{align*}
+   
+    
+<!--     <ul>
+      <li><p>Automate the conceptualization work-flow (data to MODFLOW inputs)</p></li>
+      <li><p>Beyond inputs and parameters of model code, we parameterize key choices during conceptualization</p></li>
+      <li><p>Inputs: parameters, inputs, boundary conditions (Dirichlet and Neumann), domain, locations</p></li>
+      <li><p>Outputs: head and flux to river</p></li>
+      <li><p>Karhunen-Loève parameterization for spatially distributed parameters</p></li>
+      <li><p>Polynomial Chaos surrogate for sensitivity analysis and runtime reduction</p></li>
+  </ul> -->
+
 </div>
 <div class="block">
-    <h2> Site details </h2>
-    <p> Alluvial plain with heterogeneous conductivity, a perennial river, periodic recharge, and extraction wells.</p>
-    <p> Data from <a href="http://www.ga.gov.au/">Geoscience Australia</a>, the <a href="http://www.bom.gov.au/">Bureau of Meteorology</a>, and the <a href="http://realtimedata.water.nsw.gov.au/water.stm"> NSW Office of Water</a>.</p>
+  <h2>Case study</h2>
+
+We apply a PCE surrogate to a groundwater flow model of the Peel River, Northern NSW, Australia.
+The data is from  <a href="http://www.ga.gov.au/">Geoscience Australia</a>, the <a href="http://www.bom.gov.au/">Bureau of Meteorology</a>, and the <a href="http://realtimedata.water.nsw.gov.au/water.stm"> NSW Office of Water</a>.
+  
+  The PCE surrogate was emulated the response of head, $h$ to 12 uniformly distributed parameters, including the
+  <ul>
+    <li> Largest five modes of Karhunen-Loève parameterization of the conductivity, $K$</li>
+    <li> Peturbation of piecewise continuous recharge</li>
+    <li> Pumping rate at three of the four wells</li>
+    <li> Peturbation of river level</li>
+  </ul>
+
+We develop an ``automated'' conceptualization from continential scale data sets to MODFLOW input files.
+
+
   </div>
 </div>
 
 
 <div class="block-group">
   <div class="block" >
-    <h2> The Peel River</h2>
+    <h2> The Peel River, Northern NSW, Australia</h2>
     <div id="feature_map"></div>
   </div>
   <div class="block">
@@ -263,14 +296,14 @@ X(x,t,\omega) = \sum_{k=0}^\infty \alpha_k(x,t) \Psi_k(\xi_{i_1},\xi_{i_2},\cdot
     <div id="modflow_map"></div>
   </div>
 </div>
-d
+
 
 
 <div class="block-group">
     <!-- <div class="block" id="uncertainty"></div> -->
   <div class="block">
     <h2> Parameter sensitivities </h2>
-    <p>Sensitivity of head at four locations, computed using Polynomial Chaos expansion. Equal values for "Total" and "Sobol" indices indicate limited parameter interaction. PC complexity scales exponentially with the number of relevant interactions.</p>
+    <p>Sensitivity of head at four locations, computed using Polynomial Chaos expansion. Equal values for "Total" and "Sobol" indices indicate limited parameter interaction. PCE complexity scales exponentially with the number of relevant interactions.</p>
     <div> 
       <div class='legend_square' style="background-color: steelblue;"></div> Sobol Index
       <div class='legend_square' style="background-color: darkred;"></div> Total Index
@@ -296,32 +329,31 @@ d
 
   <div class="block">
     <h2>Runtime Reduction</h2>
-    Complex runtimes include a significant amount of I/O (reading and writing files).
+    The offline time required to calibrate PCE coefficients once the necessary complex runs have been computed is negligible. Complex runtimes include a significant amount of I/O (reading and writing files). 
     <table id='runtime'>
       <tr>
         <th> Model size (cells)</th>
-        <th> Offline build time (min) </th>
+        <!-- <th> Offline build time (min) </th> -->
         <th> Complex/Surrogate online runtime </th>
       </tr>
-
       <tr>
         <td> 10x20  </td>
-        <td> 2.02   </td>
-        <td> 26,109 </td>
+        <!-- <td> 2.02   </td> -->
+        <td> 115,158   </td>
 
       </tr>
 
       <tr>
-        <td> 15x35 </td>
-        <td> 4.10  </td>
-        <td> 67,003</td>
+        <td> 20x40 </td>
+        <!-- <td> 4.10  </td> -->
+        <td> 470,293</td>
       </tr>
 
 
       <tr>
-        <td> 30x60 </td>
-        <td> 13  </td>
-        <td> 559,586 </td>
+        <td> 40x80 </td>
+        <!-- <td> 13  </td> -->
+        <td> 2,219,158  </td>
       </tr>
 
     </table>
@@ -330,11 +362,27 @@ d
 
 <div class="block-group">
   <div class="block">
+    <h2> Sensitivity index convergence (stochastic) </h2>
+    <div class="block_group" id="stochastic_convergence"></div>
+  </div>
+  <div class="block">
+    <h2> Sensitivity index convergence (spatial) </h2>
+    <div class="block_group" id="spatial_convergence"></div>
+  </div>
+  <div class="block">
+    <h2> Error convergence </h2>
+    <div class="block_group" id="error_convergence"></div>
+  </div>
+</div>
+
+
+<div class="block-group">
+  <div class="block">
     <h2>Why Polynomial Chaos? </h2>
     <ul>
     <li><p>Can be calibrated using both intrusive (Galerkin Projection) and non-intrusive, black-box (Stochastic Collocation) methods</p></li>
     <li><p>Applies to a number of continuous and discrete prior distributions (Wiener-Askey scheme)</p></li>
-    <li><p>Statistical information including Sobol sensitivity indices are a by-product (can be used for parameter screening)</p></li>
+    <li><p>Statistical information including mean, variance, and Sobol sensitivity indices are a by-product (can be used for parameter screening)</p></li>
     <li><p>Significant runtime reductions for a moderate (<span class="LaTeX">$&lt;50$</span>) number of parameters</p></li>
     <li><p>Promise for larger numbers of parameters due to the “blessing of dimensionality” (smoothness for high dimensions)</p></li>
     <li><p>Simplified interface for integrated (coupled) modelling</p></li>
@@ -346,6 +394,7 @@ d
 
     <h2>Challenges</h2>
     <ul>
+    <li><p> Balanced reduction of stochastic and deterministic discretization error </p></li>
     <li><p>Estimating Karhunen-Loève parameters</p></li>
     <li><p>Using local bases to cope with discontinuities</p></li>
     <li><p>Speedup and accuracy diminish with parameter interactions</p></li>
@@ -363,6 +412,7 @@ d
   <script src="third/d3.min.js"></script>
   <script src="third/leaflet-0.7.3.js"></script>
   <script src="third/Leaflet.Sync.js"></script>
+  <script src="third/leaflet.label.js"></script>
   <script src="js/grouped_bar.js"></script>
   <script src="js/density.js"></script>
   <script src="js/scatter_static.js"></script>
@@ -371,6 +421,7 @@ d
   <!-- <script src="js/uncertainty.js"></script> -->
 
   <script src="js/maps.js"></script>
+  <script src="js/lines.js"></script>
 	<script>
 
 var color = d3.scale.category10().range();
@@ -379,7 +430,8 @@ var color = d3.scale.category10().range();
 
 
 
-d3.json("data/openturns_pce_10_20.json", function(error, data) {
+
+d3.json("data/openturns_pce.json", function(error, data) {
 // d3.json("data/openturns_pce_15_35.json", function(error, data) {
 // d3.json("data/openturns_pce.json", function(error, data) {
   
@@ -408,12 +460,14 @@ d3.json("data/openturns_pce_10_20.json", function(error, data) {
 
 
       for (var i = 0; i < num_outputs; i++) {
-          var scatter_data = 
-            d3.range(num_samples).map(function(j){ 
+          var scatter_data = {
+            labels: {x: "surrogate head (m)", y: "complex head (m)", title: "Bore "+ i},
+            data:d3.range(num_samples).map(function(j){ 
               return { x: complex[j][i], 
                       y: meta[j][i],
                       z: 'calibration' }
-            });
+            })
+          };
 
             // d3.range(num_samples).forEach(function(j){ 
             //   scatter_data.push({
@@ -426,18 +480,24 @@ d3.json("data/openturns_pce_10_20.json", function(error, data) {
           scatter(d3.select("#scatter").append('div').attr('class','block block-half'), scatter_data);
 
 
-          var grouped_bar_data = d3.range(num_params).map(function(j){ 
-            return { 
-              "State": data['p_names'][j],
-              "Sobol Index": data["SU_by_output"][i][j],
-              "Total Index": data["SUT_by_output"][i][j]
-            }
-          });
+          var grouped_bar_data = { 
+            labels: {title: "Bore "+i},
+            data: d3.range(num_params).map(function(j){ 
+              return { 
+                "State": data['p_names'][j],
+                "Sobol Index": data["SU_by_output"][i][j],
+                "Total Index": data["SUT_by_output"][i][j]
+              }
+            })
+          }
           grouped_bar(d3.select("#grouped_bar").append('div').attr('class','block block-half'), grouped_bar_data);
 
-          var density_data = d3.range(num_samples).map(function(j){ 
-            return complex[j][i];
-          });
+          var density_data = {
+            data: d3.range(num_samples).map(function(j){ 
+              return complex[j][i];
+            }),
+            labels: {title: "Head dist. at bore "+i}
+          };
           density(d3.select("#density").append('div').attr('class','block block-half'), density_data)
 
       };
@@ -450,6 +510,156 @@ d3.json("data/openturns_pce_10_20.json", function(error, data) {
 
 });
 
+
+
+var p_names = [
+           // "well location 1", "well location 2", "well location 3", "well location 4",
+            "hk KLE mode 5","hk KLE mode 4","hk KLE mode 3", "hk KLE mode 2", "hk KLE mode 1",
+            "well rate 1","well rate 2","well rate 3",
+            "stage height 1","stage height 2","stage height 3",
+            "rch intensity"
+            ]
+
+var Blues = ["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"];
+var Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+var Greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+
+var color = d3.scale.ordinal().domain(p_names).range([  
+                                                    Reds[8], Reds[6], Reds[4], Reds[3], Reds[2],
+                                                    Greens[7],Greens[5], Greens[3], 
+                                                    Blues[7],Blues[5], Blues[3], 
+                                                    'black'
+                                                        ])
+
+
+// var legend = d3.select('body').append('svg').attr('width', 500).attr('height', 500)
+// .selectAll('.legend').data(color.domain())
+//     .enter()
+//     .append('g')
+//     .attr('class', 'legend')
+//     .attr('transform', function(d,i){
+//       return 'translate('+0+','+(i*(40+10))+')';
+//     });
+
+//   legend.append('rect') 
+//     .attr('width', 40) 
+//     .attr('height', 40) 
+//     .style('fill', color) 
+//     .style('stroke', color); 
+
+//   legend.append('text')
+//       .attr('x', 40+10)
+//       .attr('y', 40-10)
+//       .text(function(d){ return d; });
+
+
+d3.json('data/multi_res_10_20.json', function(data_10_20){
+d3.json('data/multi_res_20_40.json', function(data_20_40){
+d3.json('data/multi_res_40_80.json', function(data_40_80){
+ 
+  var spatial = [10*20, 20*40, 40*80 ];
+
+  // var res = 57;
+  var res = 225;
+  var sa = 'me';
+
+  // var data = all_data.sensitivity_data;
+  var resolutions = Object.keys(data_10_20.sensitivity_data);
+  var outputs = Object.keys(data_10_20.sensitivity_data[resolutions[0]]);
+
+  for (var j = 0; j < outputs.length; j++) {
+
+    // sensitivity convergence with stochastic resolution
+    line({
+      data: p_names.map( function(p_name, p_name_i){
+        return {
+          name: p_name,
+          data : [data_10_20.sensitivity_data,data_20_40.sensitivity_data,data_40_80.sensitivity_data].map(function(data, data_i){
+            return { 
+              x: spatial[data_i],
+              y: data[res][outputs[j]][sa][p_name_i]
+            };
+          })
+        };
+      })
+      .sort(function(a, b){ 
+        return  d3.max(b.data,function(d){ return d.y }) - d3.max(a.data, function(d){ return d.y }) ;
+      })
+      .slice(0,6),
+
+      labels: {x: "spatial resolution (cells)", y: "Sobol main effect", title: "Bore "+j }
+
+    }, d3.select("#spatial_convergence").append('div').attr('class','block block-half'));
+
+
+
+    var data = data_40_80;
+    // sensitivity convergence with stochastic resolution
+    line({
+      // sort descending
+      // we should truncate when say 95% of variance reached
+
+      data:p_names.map( function(p_name, p_name_i){
+        return {
+          name: p_name,
+          data : Object.keys(data.sensitivity_data).map(function(res, res_i){
+            return { 
+              x: +res,
+              y: data.sensitivity_data[res][outputs[j]][sa][p_name_i]
+            };
+          })
+        };
+      })
+      .sort(function(a, b){ 
+        return  d3.max(b.data,function(d){ return d.y }) - d3.max(a.data, function(d){ return d.y }) ;
+      })
+      .slice(0,6),
+
+      labels: {x: "stochastic resolution (samples)", y: "Sobol main effect", title: "Bore "+j }
+
+    }, d3.select("#stochastic_convergence").append('div').attr('class','block block-half'));
+
+
+
+    // error convergence with stochastic resolution for each spatial resolution
+    line({ 
+      data: [ 
+        {name: "10x20", data: Object.keys(data_10_20.sensitivity_data).map(function(res){
+         return {x: +res, y: data_10_20.error_data[res][outputs[j]].error };
+        }) },
+        {name: "20x40", data: Object.keys(data_20_40.sensitivity_data).map(function(res){
+         return {x: +res, y: data_20_40.error_data[res][outputs[j]].error };
+        }) },
+          {name: "40x80", data: Object.keys(data_40_80.sensitivity_data).map(function(res){
+         return {x: +res, y: data_40_80.error_data[res][outputs[j]].error };
+        }) },
+
+      ],
+      labels: {x: "stochastic resolution (samples)", y: "error", title: "Bore "+j }
+    }, d3.select("#error_convergence").append('div').attr('class','block block-half'));
+
+
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+  // convergence_spatial(data_10_20,data_20_40,data_40_80, "me");
+
+  // convergence_stochastic(data_10_20, "me");
+
+
+});
+});
+});
 
 
 

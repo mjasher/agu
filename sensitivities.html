@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Multiple Pie Charts</title>
+    <script src="third/d3.min.js"></script>
+
+    <link rel="stylesheet" href="third/pocketgrid.css">
+    <style type="text/css">
+
+body {
+  text-align: center;
+  font: 12px Arial;
+}
+
+.arc, .line_chart{
+  font-size: 9px;
+}
+
+
+
+.line_chart path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.line_chart .axis path,
+.line_chart .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+
+    </style>
+  </head>
+  <body>
+
+    <div class="container" id="charts"></div>
+
+  <script src="js/lines.js"></script>
+
+    <script type="text/javascript">
+
+// eig_vals_10_20 = [2.10108775e-02, 2.28906854e-02, 2.59993717e-02, 2.90085081e-02 , 3.87684899e-02, 4.24646344e-02, 4.35088089e-02, 4.61701665e-02 , 4.79874187e-02, 7.07173779e-02, 7.27412280e-02, 8.11094062e-02 , 1.10061818e-01, 1.31188191e-01, 1.35698791e-01, 1.84370807e-01 , 1.97853586e-01, 2.03156095e-01, 2.27913308e-01, 2.71508448e-01 , 3.23344817e-01, 3.67039258e-01, 4.22864717e-01, 4.24877481e-01 , 5.01482121e-01, 7.10834457e-01, 8.75657865e-01, 9.30302198e-01 , 1.06419778e+00, 1.15017718e+00, 1.42224966e+00, 1.63240712e+00 , 1.69378544e+00, 2.13369991e+00, 2.38175864e+00, 2.73107256e+00 , 4.08871760e+00, 4.41841335e+00, 4.44009005e+00, 5.46437640e+00 , 6.50763465e+00, 7.42842146e+00, 8.23683509e+00, 1.11211683e+01 , 1.37805049e+01, 1.48629119e+01, 1.77005377e+01, 2.06309395e+01 , 2.75722684e+01, 3.28363634e+01];
+
+// eig_vals_20_40 = [9.47339560e-02, 1.04839711e-01, 1.13464179e-01, 1.41856145e-01, 1.89719932e-01, 1.89900090e-01, 1.94820074e-01, 2.01953209e-01, 2.26088106e-01, 3.06176467e-01, 3.07100018e-01, 3.52675504e-01, 4.56563804e-01, 5.70673532e-01, 5.89341973e-01, 7.57984094e-01, 8.28691479e-01, 8.82490124e-01, 9.37881344e-01, 1.18025177e+00, 1.40649896e+00, 1.53992923e+00, 1.71360536e+00, 1.74179894e+00, 2.05154552e+00, 2.91065077e+00, 3.52011807e+00, 3.81231736e+00, 4.35845515e+00, 4.63801209e+00, 5.82904473e+00, 6.53743458e+00, 6.94643767e+00, 8.61866033e+00, 9.52748549e+00, 1.09244463e+01, 1.63584411e+01, 1.76940977e+01, 1.77046027e+01, 2.18779548e+01, 2.60718276e+01, 2.95679012e+01, 3.28803408e+01, 4.42754496e+01, 5.49450265e+01, 5.92144618e+01, 7.05655193e+01, 8.22755641e+01, 1.10036223e+02, 1.31129508e+02]
+
+// eig_vals_40_80 =  [3.95977221e-01, 4.32258756e-01, 4.63090235e-01, 5.92962508e-01, 7.75116543e-01, 7.93167719e-01, 8.03582363e-01, 8.17776794e-01, 9.45361641e-01, 1.23960683e+00, 1.25184160e+00, 1.43815096e+00, 1.84247896e+00, 2.32721215e+00, 2.40248147e+00, 3.05225006e+00, 3.35094821e+00, 3.59763482e+00, 3.77745968e+00, 4.81232417e+00, 5.73571839e+00, 6.22951612e+00, 6.87682330e+00, 7.00869733e+00, 8.25094829e+00, 1.17082740e+01, 1.40988979e+01, 1.53387674e+01, 1.75327447e+01, 1.85896674e+01, 2.34524223e+01, 2.61590901e+01, 2.79524997e+01, 3.45587653e+01, 3.81126301e+01, 4.36996749e+01, 6.54387866e+01, 7.07141602e+01, 7.08525552e+01, 8.75332460e+01, 1.04329225e+02, 1.18130478e+02, 1.31459806e+02, 1.76896399e+02, 2.19608203e+02, 2.36622909e+02, 2.82026381e+02, 3.28855864e+02, 4.39889288e+02, 5.24295744e+02]
+
+
+var p_names = [
+           // "well location 1", "well location 2", "well location 3", "well location 4",
+            "hk KLE mode 5","hk KLE mode 4","hk KLE mode 3", "hk KLE mode 2", "hk KLE mode 1",
+            "well rate 1","well rate 2","well rate 3",
+            "stage height 1","stage height 2","stage height 3",
+            "rch intensity"
+            ]
+
+var Blues = ["#f7fbff","#deebf7","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08519c","#08306b"];
+var Reds = ["#fff5f0","#fee0d2","#fcbba1","#fc9272","#fb6a4a","#ef3b2c","#cb181d","#a50f15","#67000d"];
+var Greens = ["#f7fcf5","#e5f5e0","#c7e9c0","#a1d99b","#74c476","#41ab5d","#238b45","#006d2c","#00441b"];
+
+var color = d3.scale.ordinal().domain(p_names).range([  
+                                                    Reds[8],Reds[7], Reds[7], Reds[5], Reds[4],
+                                                    Greens[7],Greens[5], Greens[3], 
+                                                    Blues[7],Blues[5], Blues[3], 
+                                                    'black'
+                                                        ])
+
+d3.json('data/multi_res_10_20.json', function(data_10_20){
+d3.json('data/multi_res_20_40.json', function(data_20_40){
+d3.json('data/multi_res_40_80.json', function(data_40_80){
+
+ 
+
+
+  convergence_spatial(data_10_20,data_20_40,data_40_80, "me");
+
+  convergence_stochastic(data_10_20, "me");
+
+
+});
+});
+});
+
+
+
+function convergence_spatial(data_10_20,data_20_40,data_40_80,sa){
+   var spatial = [10*20, 20*40, 40*80 ];
+
+  var res = 57;
+
+  // var data = all_data.sensitivity_data;
+  var resolutions = Object.keys(data_10_20.sensitivity_data);
+  var outputs = Object.keys(data_10_20.sensitivity_data[resolutions[0]]);
+
+  for (var j = 0; j < outputs.length; j++) {
+
+    line({
+      data: p_names.map( function(p_name, p_name_i){
+        return {
+          name: p_name,
+          data : [data_10_20.sensitivity_data,data_20_40.sensitivity_data,data_40_80.sensitivity_data].map(function(data, data_i){
+            return { 
+              x: spatial[data_i],
+              y: data[res][outputs[j]][sa][p_name_i]
+            };
+          })
+        };
+      })
+      .sort(function(a, b){ 
+        return  d3.max(b.data,function(d){ return d.y }) - d3.max(a.data, function(d){ return d.y }) ;
+      })
+      .slice(0,6),
+
+      labels: {x: "spatial resolution (cells)", y: "Sobol main effect", title: "Bore "+j }
+
+    }, d3.select("#charts"));
+
+
+    // line({ 
+    //   data: [{
+    //     name: "RMSE",
+    //     data: [data_10_20.error_data,data_20_40.error_data,data_40_80.error_data].map(function(data, data_i){
+    //         return { 
+    //           x: spatial[data_i],
+    //           y: data[res][outputs[j]].error
+    //         };
+    //       })
+    //   }],
+    //   labels: {x: "spatial resolution (cells)", y: "error", title: "Bore "+j }
+    // });
+
+    line({ 
+      data: [ 
+        {name: "10x20", data: Object.keys(data_10_20.sensitivity_data).map(function(res){
+         return {x: +res, y: data_10_20.error_data[res][outputs[j]].error };
+        }) },
+        {name: "20x40", data: Object.keys(data_20_40.sensitivity_data).map(function(res){
+         return {x: +res, y: data_20_40.error_data[res][outputs[j]].error };
+        }) },
+          {name: "40x80", data: Object.keys(data_40_80.sensitivity_data).map(function(res){
+         return {x: +res, y: data_40_80.error_data[res][outputs[j]].error };
+        }) },
+
+      ],
+      labels: {x: "stochastic resolution (samples)", y: "error", title: "Bore "+j }
+    }, d3.select("#charts"));
+
+
+
+
+  }
+
+}
+
+
+function convergence_stochastic(all_data,sa){
+
+  var data = all_data.sensitivity_data;
+  var resolutions = Object.keys(data);
+  var outputs = Object.keys(data[resolutions[0]]);
+
+  for (var j = 0; j < outputs.length; j++) {
+
+
+    // line({ 
+    //   data: [ {name: "RMSE", data: resolutions.map(function(res){
+    //    return {x: +res, y: all_data.error_data[res][outputs[j]].error };
+    //   }) } ],
+    //   labels: {x: "stochastic resolution (samples)", y: "error", title: "Bore "+j }
+    // });
+
+
+    line({
+      // assmue they are sorted descending
+      // we should truncate when say 95% of variance reached
+
+      data:p_names.map( function(p_name, p_name_i){
+        return {
+          name: p_name,
+          data : resolutions.map(function(res, res_i){
+            return { 
+              x: +res,
+              y: data[res][outputs[j]][sa][p_name_i]
+            };
+          })
+        };
+      })
+      .sort(function(a, b){ 
+        return  d3.max(b.data,function(d){ return d.y }) - d3.max(a.data, function(d){ return d.y }) ;
+      })
+      .slice(0,6),
+
+      labels: {x: "stochastic resolution (samples)", y: "Sobol main effect", title: "Bore "+j }
+
+    }, d3.select("#charts"));
+
+
+
+    d3.select('#charts').append('div').append('h2').html('bore ' + outputs[j]);
+
+    for (var i = 0; i < resolutions.length; i++) {
+
+      // USEFUL
+      // pie({ title: resolutions[i]+": me", values: data[resolutions[i]][outputs[j]]["me"], labels: p_names });
+      // pie({ title: resolutions[i]+": te", values: data[resolutions[i]][outputs[j]]["te"], labels: p_names });
+      // pie({ title: resolutions[i]+": ie", values: data[resolutions[i]][outputs[j]]["ie"], labels: d3.range(data[resolutions[i]][outputs[j]]["ie"].length) });
+      // pie(data[resolutions[i]][outputs[j]]["interaction_values"]);
+
+      // JUNK
+      // pie({ title: resolutions[i]+": interaction_values", values: data[resolutions[i]][outputs[j]]["interaction_values"], labels: d3.range(data[resolutions[i]][outputs[j]]["interaction_values"].length) });
+      // pie({ title: resolutions[i]+": interaction_terms", values: data[resolutions[i]][outputs[j]]["interaction_terms"], labels: d3.range(data[resolutions[i]][outputs[j]]["interaction_terms"].length) });
+
+
+    };
+
+    
+  };
+}
+
+
+function pie(data){
+
+  // document.getElementById('charts')
+
+  var m = 10,
+      r = 80,
+      // z = d3.scale.category20c();
+      z = color;
+
+
+  var svg = d3.select("#charts")
+  // .selectAll("svg")
+  //      .data(data)
+  //   .enter()
+    .datum(data.values)
+    .append("svg:svg")
+      .attr("width", (r + m) * 2)
+      .attr("height", (r + m) * 2)
+    .append("svg:g")
+      .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
+
+
+  var arc = d3.svg.arc()
+      .innerRadius(0)
+      .outerRadius(r);
+
+  svg.selectAll("path")
+      .data(d3.layout.pie())
+    .enter()
+      .append('g').attr('class', 'arc')
+      .append("svg:path")
+      .attr("d", arc)
+      .style("fill", function(d, i) { return z(i); });
+
+// title
+  svg.append('text').text(data.title)
+  .attr("transform", "translate(0,"+(m-r)+")");
+
+// labels
+  svg.selectAll(".arc")
+      .append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .style("text-anchor", "middle")
+      .text(function(d,i) { return data.labels[i] });
+
+
+}
+
+
+
+
+
+
+    </script>
+  </body>
+</html>

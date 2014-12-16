@@ -61,9 +61,9 @@ function onEachFeature(feature, layer) {
   layer.bindPopup(popupContent);
 }
 
-
-
-
+function onEachWellFeature(feature, layer) {
+  layer.bindLabel('bore '+feature.properties.i, { noHide: true });
+}
 
 
 
@@ -125,7 +125,7 @@ d3.json('data/wells.json', function(data){
 
   control.addOverlay(
     L.geoJson(data, {
-      onEachFeature: onEachFeature,
+      onEachFeature: onEachWellFeature,
 
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, {
@@ -137,7 +137,8 @@ d3.json('data/wells.json', function(data){
           fillOpacity: 0.8
         });
       }
-    }).addTo(map), 
+    })
+    .addTo(map), 
   "Wells");
 
 });
@@ -233,8 +234,8 @@ var contour_color = d3.scale.log()
 .range(d3.extent(YlOrRd));
 
 // d3.json("data/ibound.json", function(data){ new d3_layer(data, "d3 ibound", d3.scale.linear().range(["white", "black"])); });
-d3.json("data/perturbed_ibound.json", function(data){ new d3_layer(data, "d3 perturbed ibound", modflow_control, d3.scale.linear().range(["white", "black"])); });
-d3.json("data/unperturbed_ibound.json", function(data){ new d3_layer(data, "d3 unperturbed ibound", modflow_control, d3.scale.linear().range(["white", "black"])); });
+// d3.json("data/perturbed_ibound.json", function(data){ new d3_layer(data, "d3 perturbed ibound", modflow_control, d3.scale.linear().range(["white", "black"])); });
+// d3.json("data/unperturbed_ibound.json", function(data){ new d3_layer(data, "d3 unperturbed ibound", modflow_control, d3.scale.linear().range(["white", "black"])); });
 d3.json("data/hk_mean.json", function(data){ new d3_layer(data, "d3 hk", modflow_control, d3.scale.log().range(d3.extent(YlOrRd))); });
 d3.json("data/sy_mean.json", function(data){ new d3_layer(data, "d3 sy", modflow_control, d3.scale.linear().range(d3.extent(YlOrRd))); });
 d3.json("data/top.json", function(data){ new d3_layer(data, "d3 top", modflow_control, d3.scale.quantize().range(YlOrRd)); });

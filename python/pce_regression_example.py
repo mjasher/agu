@@ -69,7 +69,7 @@ def get_interactions( pce, qoi = 0 ):
     for i in xrange( len( I ) ):
         values_tmp[i] = interaction_values[I[i]]
         terms_tmp.append( interaction_terms[I[i]] )
-    assert numpy.allclose( numpy.sum( values_tmp ), pce.variance() ) # mja
+    # assert numpy.allclose( numpy.sum( values_tmp ), pce.variance() ) # mja
     values_tmp /= pce.variance()[0]
     return values_tmp[::-1], terms_tmp[::-1]
   

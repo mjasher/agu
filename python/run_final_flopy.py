@@ -14,19 +14,27 @@ date: November 2014
 [Flopy](code.google.com/p/flopy) is a python wrapper for the groundwater modelling software MODFLOW (water.usgs.gov/ogw/modflow/MODFLOW.html). Using flopy, this file contains functions for each MODFLOW input package with "initialize" and "perturb" methods. The "initialize" method reads in data and sets fixed and default parameters. "Perturb" is intended to take whatever inputs one wishes to perform sensitivity analysis for.
 
 Flopy isn't designed to have packages changed individually (eg. subsequent calls of ModflowDis will not change (nlay,nrow,ncol)). Perhaps simply writing functions which took all necessary inputs for each package and produced just that input file would be more flexible.
+
+
+FLOPY DEMO
+hk = 1.
+vka = 1.
+sy = 0.1
+ss = 1.e-4
+laytyp = 1
+
+LUK
+I had a quick look the flopy tutorial. Your idea for parameterisation is ok. 
+You can include the two GHB conductance terms as well. 
+Vary the conductivity and conductance over an order of magnitude, 
+specific yield (storage) between .05 and 0.15, 
+the GHB stages +/- 1m and 
+the pumping rate +/- 50.
+
 """
 
 
-original_ibound = [[[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]]
+
 
 
 working_directory = '/home/mikey/Dropbox/pce/agu/python/'
@@ -37,6 +45,8 @@ modelname = 'flopy_model'
 bounding_box = [[-30.82,150.54],[-31.04,151.01]] #  top left, bottom right
 
 nlay,nrow,ncol = (1,10,20)
+# nlay,nrow,ncol = (1,20,40)
+# nlay,nrow,ncol = (1,40,80)
 nper = 3
 perlen = [1, 100, 100]
 nstp = [1, 100, 100]
@@ -76,7 +86,8 @@ for well in wells:
     interesting_points.append([0, int((well[1]-y_min)/pixelHeight), int((well[0]-x_min)/pixelWidth) ])
 
 
-num_dims = 14
+num_dims = 12
+# num_dims = 14
 num_outputs = 4
 
 # TODO how to cope with errors 
@@ -87,7 +98,7 @@ dis_init = final_flopy_api.dis_init(nlay, nrow, ncol, bounding_box)
 
 bas_init = final_flopy_api.bas_init()
 
-n_var_upw = 3
+n_var_upw = 5
 upw_init = final_flopy_api.upw_init(nlay, nrow, ncol, delr, delc, bounding_box, n_var_upw)
 
 wel_init = final_flopy_api.wel_init(nlay, nrow, ncol, bounding_box)
@@ -97,8 +108,8 @@ rch_init = final_flopy_api.rch_init(nlay, nrow, ncol, bounding_box)
 riv_init = final_flopy_api.riv_init(nlay, nrow, ncol, bounding_box)
 
 p_names = [
-            "well location 1", "well location 2", "well location 3", "well location 4",
-            "hk KLE mode 1","hk KLE mode 2","hk KLE mode 3",
+            # "well location 1", "well location 2", "well location 3", "well location 4",
+            "hk KLE mode 5","hk KLE mode 4","hk KLE mode 3", "hk KLE mode 2", "hk KLE mode 1",
             "well rate 1","well rate 2","well rate 3",
             "stage height 1","stage height 2","stage height 3",
             "rch intensity"
@@ -110,9 +121,7 @@ p_names = [
 times = []
 def f( x ):
 
-    print "x", x
-    # par = np.ones(14)
-    # par[4:] =x[4:]
+    # print "x", x
     par = x
     # par = np.array([0.60412155, 0.85414241, 0.18801196, 0.75726005, 0.62560195, 0.55517539 , 0.30901852, 0.30107194, 0.84115518, 0.88161805, 0.53778622, 0.95330613 , 0.10741349, 0.09261109])
 
@@ -133,22 +142,21 @@ def f( x ):
     strt = np.ones((nlay, nrow, ncol), dtype=np.float32)
     strt[:, :, 0] = 10.
     strt[:, :, -1] = 0.
-    move_boundary = 1.0*par[0:4]
-    # move_boundary = np.zeros((4))
+    # move_boundary = par[0:4]
+    move_boundary = np.zeros((4))
     bas_perturb = final_flopy_api.bas_perturb(bas_init, mf, strt, nrow, ncol, bounding_box, move_boundary = move_boundary)
     bas_perturb.write_file()
 
-    # kle_modes = par[4:7]
+    kle_modes = 0.1*par[0:5]
     # assert len(kle_modes) ==  n_var_upw
-    kle_modes = np.ones((3))
     upw_perturb = final_flopy_api.upw_perturb(upw_init, mf, kle_modes = kle_modes)
     upw_perturb.write_file()
     # print upw_perturb.hk.array
 
-    wel_rate = -100*par[7:10]
-    assert len(wel_rate) == nper
-    move_boundary = 2*par[0:4]
-    move_boundary = np.ones(4)
+    wel_rate = np.zeros((4))
+    wel_rate[:3] = -200*(1.+np.array(par[5:8]))
+    # assert len(wel_rate) == nper
+    move_boundary = np.zeros(4)
     wel_perturb = final_flopy_api.wel_perturb(wel_init, mf, nper, rates = wel_rate, move_boundary = move_boundary)
     wel_perturb.write_file()
 
@@ -157,13 +165,13 @@ def f( x ):
     ibound = bas_perturb.ibound # can't have boundary conditions where ibound <= 0
     # print "ibound", (ibound==original_ibound)[0][2:3]
     riv_init = final_flopy_api.riv_init(nlay, nrow, ncol, bounding_box)
-    stage_height = par[10:13]
-    stage_height[0] =stage_height[0]*0.25
+    stage_height = par[8:11]
+    # stage_height[0] = stage_height[0]*0.25
     assert len(stage_height) == nper
     riv_perturb = final_flopy_api.riv_perturb(riv_init, mf, top, hk[0], nper, stage_height = stage_height, ibound=ibound)
     riv_perturb.write_file()
 
-    intensity = 0.2*par[13]
+    intensity = par[11]
     rch_perturb =  final_flopy_api.rch_perturb(rch_init, mf, intensity)
     rch_perturb.write_file()
 
@@ -185,13 +193,17 @@ def f( x ):
     headobj = flopy.utils.binaryfile.HeadFile(working_directory+modelname+'-mf/'+modelname+'.hds')
 
     # plot
+    ############################
+    # useful using outputs.html
     # final_flopy_api.results_to_geojson(headobj, nrow, ncol, bounding_box)
 
     heads = headobj.get_data(totim=201)
-    y = np.array([ heads[p[0],p[1],p[2]] for p in interesting_points ])
-    if np.isnan(y[0]):
-        y = np.zeros(num_outputs)
-    print "y", y
+    
+    y = np.array([ heads[p[0],p[1],p[2]] for p in interesting_points ], dtype='d')
+    # if np.isnan(y[0]):
+    #     y = np.zeros(num_outputs)
+
+    # print "y", y
     return y
 
     # to plot
@@ -253,9 +265,10 @@ if __name__ == '__main__':
     # results_to_geojson(headobj)
 
     # TODO package doesnn't updata
-    f(np.random.random(14))
+    f(np.random.random(12))
+
     # f(np.array([ 0.71520897,0.82717036,0.91802779,0.14018852,0.78165151,0.94436107 ,0.34868661,0.71046869,0.88267679,0.01406898,0.73955743,0.03031184 ,0.46738959,0.2654058 ]))
-    f(np.array([ 0.71520897,0.92717036,0.51802779,0.14018852,0.78165151,0.94436107 ,0.34868661,0.71046869,0.88267679,0.01406898,0.73955743,0.03031184 ,0.46738959,0.2654058 ]))
+    # f(np.array([ 0.71520897,0.92717036,0.51802779,0.14018852,0.78165151,0.94436107 ,0.34868661,0.71046869,0.88267679,0.01406898,0.73955743,0.03031184 ,0.46738959,0.2654058 ]))
     # f(np.random.random(14))
     # f([0.616718767492])
     # f([0.216718767492])
