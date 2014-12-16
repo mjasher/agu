@@ -14,6 +14,8 @@ function d3_layer(data, name, control, color_func){
           d.pix_bottomRight = control._map.latLngToLayerPoint(d.bottomRight);
       });
 
+
+
       this._el.selectAll('rect')
         .data(this._data)
         .attr('x', function(d) { return d.pix_topLeft.x; })
@@ -21,7 +23,7 @@ function d3_layer(data, name, control, color_func){
         .attr('width', function(d){ return d.pix_bottomRight.x - d.pix_topLeft.x; })
         .attr('height', function(d){ return d.pix_bottomRight.y - d.pix_topLeft.y; })
         .attr('fill', function(d){ 
-          if (d.value == 0 || d.value == -9999) return 'rgba(0,0,0,0)';
+          if (d.value == 0 || d.value == -9999 || !d.value) return 'none'; // rgba(0,0,0,0)
           // else return this_guy._color_func(d.value); 
           return this_guy._color_func(d.value); 
         })

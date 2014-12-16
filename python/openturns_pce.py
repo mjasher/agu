@@ -54,11 +54,11 @@ class modelePYTHON(OpenTURNSPythonFunction) :
 			# return [None]
 
 
-# Create a distribution of dimension n for the input random vector
-dists = [Uniform(0,1) for i in range(num_dims)]
+# Create a distribution of dimension numpy for the input random vector
+dists = [Uniform(-1,1) for i in range(num_dims)]
 Xdist = ComposedDistribution(DistributionCollection( dists ))
 vectX = RandomVector(Xdist)
-extended_dists = [Uniform(0,1.5) for i in range(num_dims)]
+extended_dists = [Uniform(-1.1,1.1) for i in range(num_dims)]
 extended_Xdist = ComposedDistribution(DistributionCollection( extended_dists ))
 extended_vectX = RandomVector(extended_Xdist)
 
@@ -90,7 +90,7 @@ approximationAlgorithm = LeastSquaresMetaModelSelectionFactory(basisSequenceFact
 #
 # Number of simulations (i.e. simulation budget)
 #
-N = 100
+N = 200
 #
 # Initialization of the seed of the random generator
 RandomGenerator.SetSeed(77)

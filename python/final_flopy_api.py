@@ -190,6 +190,7 @@ def bas_perturb(init, mf, strt, nrow, ncol, bounding_box, move_boundary):
 	##
 
 
+
 	# create a new ring with perturbed points
 	newRing = ogr.Geometry(ogr.wkbLinearRing)
 
@@ -214,6 +215,8 @@ def bas_perturb(init, mf, strt, nrow, ncol, bounding_box, move_boundary):
 		geom.AddGeometry(old_geom.GetGeometryRef(i))
 
 
+
+
 	# create geojson of perturbed to check
 	if plot:
 		if os.path.exists(data_dir+'perturbed_boundary.json'):
@@ -231,6 +234,7 @@ def bas_perturb(init, mf, strt, nrow, ncol, bounding_box, move_boundary):
 
 	# rasterize
 
+
 	array = np.empty((nrow,ncol))
 	for row in range(nrow):
 		for col in range(ncol):
@@ -245,6 +249,7 @@ def bas_perturb(init, mf, strt, nrow, ncol, bounding_box, move_boundary):
 			clipping_poly = ogr.Geometry(ogr.wkbPolygon)
 			clipping_poly.AddGeometry(temp_ring)
 			
+			# causes Warning 1: OGR_G_Area() called against non-surface geometry type.
 			if geom.Intersection(clipping_poly).Area() == 0:
 				array[row,col] = 0
 			else:
@@ -275,8 +280,10 @@ def upw_init( nlay, nrow, ncol, delr, delc, bounding_box, num_dims_upw):
 			[feature.GetGeometryRef().Clone().Intersection(clipping_poly).Area(),
 				feature.GetField('HydKValue')]
 			for feature in source_layer
+			if feature.GetField('HydKValue') != None
 		])
 		return np.average(properties[:,1], weights=properties[:,0])
+
 
 	hk_mean =  ogr_to_modflow.ogr_to_modflow(
 			data_dir+"IGWWaterTableHydraulicConductivity.json",
@@ -300,6 +307,8 @@ def upw_init( nlay, nrow, ncol, delr, delc, bounding_box, num_dims_upw):
 		else:
 			return np.average(properties[:,1], weights=properties[:,0])
 
+
+
 	sy_mean = ogr_to_modflow.ogr_to_modflow(
 		data_dir+"IGWWaterTableHydraulicConductivity.json",
 		nrow, ncol,
@@ -311,10 +320,21 @@ def upw_init( nlay, nrow, ncol, delr, delc, bounding_box, num_dims_upw):
 		with open(data_dir+"sy_mean.json", 'w') as f:
 			f.write(json.dumps(sy_mean ))
 
-	upw_kle = kle.kle(KLE_sigma = 0.2, 
-		KLE_L = delr,
+	# TODO just to see decay
+	
+	# temp_upw_kle = kle.kle(KLE_sigma = 1, 
+	# 	KLE_L = 5*2857.98836183, #5*delr,
+	# 	KLE_num_eig = 50,
+	# 	# KLE_num_eig = num_dims_upw,
+	# 	KLE_mu = np.zeros(nlay*nrow*ncol),
+	# 	KLE_scale = 1,
+	# 	nrow = nrow, ncol = ncol, nlay = nlay, Lx = delc, Ly = delr)
+
+
+	upw_kle = kle.kle(KLE_sigma = 1, 
+		KLE_L = 5*2857.98836183, #5*delr,
 		KLE_num_eig = num_dims_upw,
-		KLE_mu = 3*np.ones(nlay*nrow*ncol),
+		KLE_mu = np.zeros(nlay*nrow*ncol),
 		KLE_scale = 1,
 		nrow = nrow, ncol = ncol, nlay = nlay, Lx = delc, Ly = delr)
 
@@ -332,8 +352,14 @@ def upw_perturb(init, mf, kle_modes):
 	chani = 1.0 
 	layvka = 1 
 	laywet = 0
-	hk = hk_mean["array"] + upw_kle.compute(kle_modes)
-	# hk = 1+np.random.random((nlay,nrow,ncol)) # default
+
+	# hk = hk_mean["array"] + np.exp( upw_kle.compute(kle_modes) )
+	
+	# print "UPW", np.min(np.exp(upw_kle.compute(kle_modes))), np.mean(np.exp(upw_kle.compute(kle_modes))), np.max(np.exp(upw_kle.compute(kle_modes)))
+	hk = np.exp( np.log(np.array(hk_mean["array"])) + upw_kle.compute(kle_modes) )
+	# print "HK", np.min(hk), np.mean(hk), np.max(hk)
+	
+	# hk = 3.5+np.random.random(((1,10,20))) # default
 	vka = 1 #np.ones((nlay,nrow,ncol))
 	sy = np.array(sy_mean["array"]) #0.1
 	ss = 1.e-4 # np.array(self.sy_mean["array"])*1e-4 #1.e-4
@@ -425,9 +451,12 @@ def riv_perturb(init, mf, top, hk, nper, stage_height, ibound):
 			col = stage[2]
 			riv_period.append([
 				1, row, col,
-				top[row,col] + 7 + stage_height[per], # stage height
+				# top[row,col] + 3 + stage_height[per], # stage height
+				# hk[row,col] * stage[4], # conductance
+				# top[row,col] + 2, # river bottom
+				top[row,col] - 1 + stage_height[per], # stage height
 				hk[row,col] * stage[4], # conductance
-				top[row,col] + 5, # river bottom
+				top[row,col] - 3, # river bottom
 				])
 
 		riv_stress_periods.append(riv_period)
@@ -440,16 +469,11 @@ def riv_perturb(init, mf, top, hk, nper, stage_height, ibound):
 wel 
 """     
 def wel_init(nlay, nrow, ncol, bounding_box):
-
 	
 	wells = [
-	    # [ 150.61117315279262, -30.915837309134634], 
-	    # [ 150.74639511003622, -30.93865809953413], 
 	    [ 150.74673843279015, -30.885048778979645], 
 	    [ 150.87479782523587, -30.876906574734466],
-	    [ 150.91599655570462, -30.987047586140907],
-	    # [ 150.8969893460744, 30.99850840015749],
-	    # [ 150.69030904822284, -30.988504480642938],
+	    [ 150.91599655570462, -30.987047586140907], #
 	    [ 150.69695663871244, -31.005293991028097]
 	]
 
@@ -473,8 +497,8 @@ def wel_init(nlay, nrow, ncol, bounding_box):
 		    "features": [
 		      { "type": "Feature",
 		        "geometry": {"type": "Point", "coordinates": p},
-		        "properties": {"flux": 100},
-		        } for p in wells ]
+		        "properties": {"flux": 100, "i": i},
+		        } for i,p in enumerate(wells) ]
 		     } ))
 
 		def rasterize_well(source_layer, clipping_poly):
@@ -518,9 +542,10 @@ def wel_perturb(init, mf, nper, rates, move_boundary):
 	wel_stress_periods = []
 	for per in range(nper):
 		wells = []
-		for well in rasterized_wells:
+		for i,well in enumerate(rasterized_wells):
 			wells.append([
-				1, well[1], well[2], rates[per]
+				# 1, well[1], well[2], rates[per]
+				1, well[1], well[2], rates[i]
 				])
 		wel_stress_periods.append(wells)
 
@@ -564,8 +589,9 @@ def rch_perturb(init, mf, intensity):
 	rain = init
 
 	# TODO decide multiply factor, change sp to months
-	# 30 days per month, 1000mm in a m, 0.1% rainfall is effective
-	rech = intensity*rain[:3]/(30 * 1000 * 1000) 
+	# 30 days per month, 1000mm in a m, 1% rainfall is effective
+	rech = (1.+intensity/20.)*rain[:3]/(30 * 1000 * 100) 
+	# print "RCH", np.min(rech), np.max(rech)
 	return flopy.modflow.ModflowRch(mf, rech = rech.tolist())  
 
 

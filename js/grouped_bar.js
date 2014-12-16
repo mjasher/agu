@@ -37,19 +37,19 @@ function grouped_bar(el, data){
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+    var ageNames = d3.keys(data.data[0]).filter(function(key) { return key !== "State"; });
 
-    data.forEach(function(d) {
+    data.data.forEach(function(d) {
       d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
     });
 
-    x0.domain(data.map(function(d) { return d.State; }));
+    x0.domain(data.data.map(function(d) { return d.State; }));
     x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
-    y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+    y.domain([0, d3.max(data.data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
 
     var state = svg.selectAll(".state")
-        .data(data)
+        .data(data.data)
       .enter().append("g")
         .attr("class", "g")
         .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
@@ -80,6 +80,8 @@ function grouped_bar(el, data){
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Fraction of variance");
+
+  svg.append('text').text(data.labels.title).style("text-anchor", "middle").style('font','14px sans-serif').attr("transform", "translate(" + (width/2) + "," + 15 + ")");
 
 
     // var legend = svg.selectAll(".legend")
